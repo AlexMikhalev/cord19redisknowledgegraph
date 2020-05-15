@@ -46,7 +46,6 @@ datapath = Path('../input')
 setname='processed_docs_stage1_title'
 
 def parse_json_title(json_filename):
-    logging.info("Processing ..", json_filename.stem)
     with open(json_filename) as json_data:
         data = json.load(json_data)
         return str(data['metadata']['title'])
@@ -54,9 +53,9 @@ def parse_json_title(json_filename):
 #process document return sentences and entities 
 def process_file(f, rediscluster_client=rediscluster_client):
     article_id=f.stem
-    logger.info("Processing article_id ", article_id)
+    logger.info(f"Processing article_id {article_id}" )
     if rediscluster_client.sismember(setname, article_id):
-        logger.info("already processed ", article_id)
+        logger.info(f"already processed {article_id}")
         return article_id
     article_title=parse_json_title(f)
     rediscluster_client.set(f"title:{article_id}",article_title)
