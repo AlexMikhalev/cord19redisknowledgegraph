@@ -12,4 +12,5 @@ def detect_language(x):
 
 gb = GB()
 gb.foreach(detect_language)
+gb.count()
 gb.run('paragraphs:*')

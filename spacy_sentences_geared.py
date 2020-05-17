@@ -24,4 +24,5 @@ def parse_paragraphs(x):
 
 gb = GB()
 gb.foreach(parse_paragraphs)
+gb.count()
 gb.run('paragraphs:*')
