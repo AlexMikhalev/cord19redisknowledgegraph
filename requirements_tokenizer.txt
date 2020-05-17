@@ -1,0 +1,4 @@
+torch
+transformers==2.9.1
+redis
+gearsclient
