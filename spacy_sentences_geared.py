@@ -1,5 +1,6 @@
 import spacy 
 nlp=spacy.load('en_core_web_md', disable=['ner','tagger'])
+nlp.max_length=2000000
 
 def remove_prefix(text, prefix):
     return text[text.startswith(prefix) and len(prefix):]
