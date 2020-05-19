@@ -30,5 +30,4 @@ def symspell_sentences(record):
     
 gb = GB()
 gb.foreach(symspell_sentences)
-gb.count()
-gb.register('sentences:*',keyTypes=['string'])
+gb.register('sentences:*')
