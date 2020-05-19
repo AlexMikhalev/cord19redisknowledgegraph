@@ -1,3 +1,4 @@
+from redisgears import log
 import spacy 
 nlp=spacy.load('en_core_web_md', disable=['ner','tagger'])
 nlp.max_length=2000000
@@ -19,6 +20,7 @@ def parse_paragraphs(x):
             execute('SET', sentence_key, each_sent)
             idx+=1
         execute('SADD','processed_docs_stage2_sentence', article_id)
+        log("Successfully processed paragraphs "+str(article_id),level='notice')
     else:
         execute('SADD','screw_ups', x['key'])
     
@@ -26,4 +28,4 @@ def parse_paragraphs(x):
 gb = GB()
 gb.foreach(parse_paragraphs)
 gb.count()
-gb.run('paragraphs:*')
+gb.register('paragraphs:*',keyTypes=['string'])

@@ -1,16 +1,19 @@
 from langdetect import detect   
+from redisgears import log
 
-def detect_language(x):
+def detect_language(record):
     #detect language of the article
     try:
-        lang=detect(x['value'])
+        lang=detect(record['value'][:1000])
     except:
         lang="empty"
-    execute('SET', 'lang_article:' + x['key'], lang)
+    execute('SET', 'lang_article:' + record['key'], lang)
+    log("Success "+str(record['key']),level='notice')
     if lang!='en':
-        execute('SADD','articles_to_delete', x['key'])
+        log(str(record['key']),level='notice')
+        execute('SADD','articles_to_delete', record['key'])
 
 gb = GB()
 gb.foreach(detect_language)
 gb.count()
-gb.run('paragraphs:*')
+gb.register('paragraphs:*',keyTypes=['string'])
