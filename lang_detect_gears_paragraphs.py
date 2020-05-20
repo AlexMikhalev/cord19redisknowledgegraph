@@ -16,5 +16,4 @@ def detect_language(record):
 
 gb = GB()
 gb.foreach(detect_language)
-gb.count()
 gb.register('paragraphs:*',keyTypes=['string'])

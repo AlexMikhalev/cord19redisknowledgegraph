@@ -7,8 +7,8 @@
     - [ ]  Redis paragraph split into sentences (BERT tokenised) into article_id, paragraph_id, sentence_id, sentence
     - [x]  processed article keys are store cbloom in redis
 
-- [ ]  Detect sentence language
-- [ ]  Apply symspell
+- [x]  Detect sentence language
+- [x]  Apply symspell
 - [ ]  tokenise sentence, storing model details in DB, input sentence, output tokenised sentence, with reference to table with model configuration
 - [ ]  Remove stopwords
 - [ ]  Expand abbreviations, store abbreviations dictionary in Redis (cache)
