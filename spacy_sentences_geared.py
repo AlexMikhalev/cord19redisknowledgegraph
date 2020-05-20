@@ -1,5 +1,5 @@
-import spacy 
-nlp=spacy.load('en_core_web_md', disable=['ner','tagger'])
+import en_core_web_sm
+nlp = en_core_web_sm.load(disable=['ner','tagger'])
 # nlp.max_length=1200000
 
 def remove_prefix(text, prefix):
