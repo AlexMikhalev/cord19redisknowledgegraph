@@ -29,7 +29,6 @@ logger = logging.getLogger()
 
 import config
 rc_list=json.loads(config.config(section='rediscluster')['rediscluster'])
-redisbloomclient = Client(host=config.config()['host'],port=config.config()['port'])
 
 
 rediscluster_client = RedisCluster(startup_nodes=rc_list, decode_responses=True)
@@ -58,9 +57,9 @@ def parse_json_body_text(json_filename):
 def process_file(f, rediscluster_client=rediscluster_client):
     article_id=f.stem
     logger.info("Processing article_id "+ article_id)
-    if rediscluster_client.sismember('processed_docs_stage1_para', article_id):
-        logger.info("already processed "+ article_id)
-        return article_id
+    # if rediscluster_client.sismember('processed_docs_stage1_para', article_id):
+    #     logger.info("already processed "+ article_id)
+    #     return article_id
     article_body=[]
     for para in parse_json_body_text(f):
         article_body.append(para)
@@ -77,7 +76,7 @@ for each_file in json_filenames:
     task=executor.submit(process_file,each_file,rediscluster_client)
     processed.append(task)
     counter+=1
-    if counter>200:
+    if counter>600:
         break
 
     
