@@ -17,7 +17,7 @@ def parse_paragraphs(x):
         execute('SET', sentence_key, each_sent)
         idx+=1
         execute('SADD','processed_docs_stage2_sentence', article_id)
-        Log("Successfully processed paragraphs "+str(article_id),level='notice')
+        log("Successfully processed paragraphs "+str(article_id),level='notice')
     else:
         execute('SADD','screw_ups', x['key'])
     

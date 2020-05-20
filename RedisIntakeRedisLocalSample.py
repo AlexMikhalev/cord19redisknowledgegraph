@@ -1,8 +1,6 @@
 
 import ujson as json
-from redis.exceptions import ResponseError
-from rediscluster import RedisCluster
-from redisbloom.client import Client
+
 
 import sys
 from datetime import datetime
@@ -29,6 +27,8 @@ logger = logging.getLogger()
 
 import config
 import redis
+from redis.exceptions import ResponseError
+
 rediscluster_client = redis.Redis(host=config.config()['host'],port=config.config()['port'])
 
 import os
