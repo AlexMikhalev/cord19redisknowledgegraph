@@ -1,6 +1,6 @@
 import en_core_web_sm
 nlp = en_core_web_sm.load(disable=['ner','tagger'])
-# nlp.max_length=1200000
+nlp.max_length=1200000
 
 def remove_prefix(text, prefix):
     return text[text.startswith(prefix) and len(prefix):]
