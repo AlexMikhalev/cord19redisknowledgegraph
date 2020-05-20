@@ -23,6 +23,7 @@ def parse_paragraphs(x):
     
 
 gb = GB()
+gb.repartition(lambda x: int(len(x['value'])))
 gb.foreach(parse_paragraphs)
 gb.count()
-gb.run('en:paragraphs:*',keyTypes=['string'])
+gb.register('en:paragraphs:*',keyTypes=['string'])
