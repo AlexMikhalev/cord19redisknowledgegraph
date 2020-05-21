@@ -5,16 +5,16 @@ def remove_prefix(text, prefix):
 
 def detect_language(record):
     #detect language of the article
+    value=record['value']
     try:
-        lang=detect(record['value'][:1000])
+        lang=detect(value[:1000])
     except:
         lang="empty"
     if lang=='en':
         article_id = remove_prefix(record['key'],'paragraphs:') 
-        paragraph_key="en:{%s}:" % article_id
-        execute('SET', paragraph_key, record['value'])
+        paragraph_key="en:%s:{%s}" % (article_id, hashtag())
         log(f"Success lang {paragraph_key}",level='notice')
-        log('Hashtag {%s}' % hashtag())
+        execute('SET', paragraph_key, value)
         execute('SADD','successfull_lang{%s}' % hashtag(), paragraph_key)
     else:
         log("Failed to detect language: "+str(record['key']),level='notice')
@@ -22,4 +22,4 @@ def detect_language(record):
 
 gb = GB()
 gb.foreach(detect_language)
-gb.register('paragraphs:*',keyTypes=['string'], mode="async_local")
+gb.register('paragraphs:*',keyTypes=['string'], mode="sync")

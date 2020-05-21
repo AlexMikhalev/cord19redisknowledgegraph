@@ -16,7 +16,7 @@ def parse_paragraphs(x):
     doc=nlp(paragraphs)
     idx=1
     for each_sent in doc.sents:
-        sentence_key="sentences:{%s}:%s" % (article_id, idx)
+        sentence_key="sentences:%s:%s:{%s}" % (article_id, idx,hashtag())
         execute('SET', sentence_key, each_sent)
         idx+=1
         execute('SADD','processed_docs_stage2_sentence{%s}' % hashtag(), article_id)

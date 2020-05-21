@@ -57,9 +57,9 @@ def parse_json_body_text(json_filename):
 def process_file(f, rediscluster_client=rediscluster_client):
     article_id=f.stem
     logger.info("Processing article_id "+ article_id)
-    # if rediscluster_client.sismember('processed_docs_stage1_para', article_id):
-    #     logger.info("already processed "+ article_id)
-    #     return article_id
+    if rediscluster_client.sismember('processed_docs_stage1_para', article_id):
+        logger.info("already processed "+ article_id)
+        return article_id
     article_body=[]
     for para in parse_json_body_text(f):
         article_body.append(para)
