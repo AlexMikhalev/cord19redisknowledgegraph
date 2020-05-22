@@ -21,3 +21,15 @@ sh cluster_pipeline_events.sh
 ```
 docker run -d -v $PWD/conf/docker-config.sh:/cluster/config.sh --name rgcluster -p 30001:30001 -p 30002:30002 -p 30003:30003 redislabs/rgcluster:latest
 ```
+# Rebuild Manually using create-cluster
+```
+./create-cluster clean
+./create-cluster start
+ echo "yes" | ./create-cluster create
+ redis-trib.py execute --addr 10.144.17.211:30001 RG.REFRESHCLUSTER
+ redis-trib.py execute --addr 10.144.17.211:30001 RG.CONFIGSET ExecutionMaxIdleTime 300000
+ redis-trib.py execute --addr 10.144.17.211:30001 CONFIG SET proto-max-bulk-len 2048mb
+ ```
+ 
+
+
