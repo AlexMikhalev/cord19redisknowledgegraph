@@ -50,7 +50,7 @@ export class AppComponent implements AfterViewInit {
   }
 
   postProcessing(){
-    const bloomPass = new UnrealBloomPass(new Vector2(128, 128), 3, 1, 0.1);
+    const bloomPass = new UnrealBloomPass(new Vector2(128, 128), 0.7, 0.2, 0);
     bloomPass.strength = 3;
     bloomPass.radius = 1;
     bloomPass.threshold = 0.1;
