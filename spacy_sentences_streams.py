@@ -1,4 +1,3 @@
-# FIXME: don't use it, streams are better solution
 nlp = None
 
 def load_nlp_object():
@@ -20,9 +19,8 @@ def remove_prefix(text, prefix):
 
 def parse_paragraphs(x):
     global nlp
-    key_prefix="en:"
-    paragraphs =x['value']
-    article_id = remove_prefix(x['key'],key_prefix)
+    article_id=x['value']['article_id']
+    paragraphs =x['value']['content']
     if not nlp:
         nlp=load_nlp_object()
     doc=nlp(paragraphs)
@@ -31,7 +29,10 @@ def parse_paragraphs(x):
         sentence_key="sentences:%s:%s:{%s}" % (article_id, idx, hashtag())
         execute('SET', sentence_key, each_sent)
         idx+=1
-        execute('XADD', 'processed_docs_stage2_sentence{%s}' % hashtag(), '*', 'key', f"{sentence_key}")
+        execute('XADD', 'sentences_tospellcheck{%s}' % hashtag(), '*', 'sentence_key', f"{sentence_key}",'content', f"{each_sent}")
         log(f"Successfully processed paragraphs {sentence_key}",level='notice')
     
-GB().repartition(lambda x: x['key']).foreach(parse_paragraphs).count().run('en:*', keyTypes=['string'], onRegistered=OnRegistered, mode="async_local")
+gb = GearsBuilder('StreamReader')
+gb.foreach(parse_paragraphs)
+gb.register('lang_eng*', batch=1, mode="async_local", onRegistered=OnRegistered, onFailedPolicy='continue', trimStream=True)
+

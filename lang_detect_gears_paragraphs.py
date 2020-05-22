@@ -12,14 +12,14 @@ def detect_language(record):
         lang="empty"
     if lang=='en':
         article_id = remove_prefix(record['key'],'paragraphs:') 
-        paragraph_key="en:%s:{%s}" % (article_id, hashtag())
-        log(f"Success lang {paragraph_key}",level='notice')
-        execute('SET', paragraph_key, value)
-        execute('SADD','successfull_lang{%s}' % hashtag(), paragraph_key)
+        log(f"Success lang {article_id}",level='notice')
+        execute('XADD', 'lang_eng{%s}' % hashtag(), '*', 'article_id', f"{article_id}","content",f"{value}")
     else:
-        log("Failed to detect language: "+str(record['key']),level='notice')
-        execute('SADD','articles_to_delete', record['key'])
+        log("Failed to detect language, deleting: "+str(record['key']),level='notice')
+        execute('DEL', record['key'])
+
 
 gb = GB()
 gb.foreach(detect_language)
+gb.count()
 gb.register('paragraphs:*',keyTypes=['string'], mode="sync")

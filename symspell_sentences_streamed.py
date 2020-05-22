@@ -21,26 +21,27 @@ def OnRegisteredSym():
 
 
 
-def remove_prefix(text, prefix):
-    return text[text.startswith(prefix) and len(prefix):]
-
 def symspell_sentences(record):
     global sym_spell
-    key_prefix='sentences:'
     if not sym_spell:
         sym_spell=load_symspell()
-        
-    sentence_orig=execute('GET', record['key'])
+
+    sentence_key=record['value']['sentence_key']
+    sentence_orig=record['value']['content']
+    log(f"Spellchecker received {sentence_key}")
     # max edit distance per lookup (per single word, not per whole input string)
     suggestions = sym_spell.lookup_compound(sentence_orig, max_edit_distance=2,
                                         transfer_casing=True, ignore_non_words=True)
-    key = remove_prefix(record['key'],key_prefix)
-    sentence_key="symspelled:%s" % (key)
+
+
     value = suggestions[0].term
     if value:
-        execute('SET', sentence_key, value)
+        execute('XADD', 'sentence_to_tokenise_{%s}' % hashtag(), '*', 'sentence_key', f"{sentence_key}")
         log("Successfully spellchecked sentence "+str(sentence_key),level='notice')
     else:
-        execute('SADD','spelling_screw_ups{%s}' % hashtag(), record['key'])
+        execute('SADD','spelling_screw_ups{%s}' % hashtag(), sentence_key)
 
-GB().foreach(symspell_sentences).count().run('sentences:*', keyTypes=['string'], onRegistered=OnRegisteredSym, mode="async_local")
+
+bg = GearsBuilder('StreamReader')
+bg.foreach(symspell_sentences)
+bg.register('sentences_tospellcheck*', batch=1, mode="async_local",onRegistered=OnRegisteredSym, onFailedPolicy='continue', trimStream=True)
