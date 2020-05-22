@@ -34,4 +34,4 @@ def parse_paragraphs(x):
         execute('XADD', 'processed_docs_stage2_sentence{%s}' % hashtag(), '*', 'key', f"{sentence_key}")
         log(f"Successfully processed paragraphs {sentence_key}",level='notice')
     
-GB().repartition(lambda x: x['key']).foreach(parse_paragraphs).count().run('en:*', keyTypes=['string'], onRegistered=OnRegistered, mode="async_local")
+GB().foreach(parse_paragraphs).count().run('en:*', keyTypes=['string'], onRegistered=OnRegistered, mode="async_local")

@@ -20,7 +20,6 @@ def detect_language(record):
 
 
 gb = GB()
-gb.repartition(lambda x:len(x['value']))
 gb.foreach(detect_language)
 gb.count()
 gb.register('paragraphs:*',keyTypes=['string'], mode="async_local")

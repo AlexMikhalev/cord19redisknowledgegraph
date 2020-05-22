@@ -28,7 +28,8 @@ def symspell_sentences(record):
 
     sentence_key=record['value']['sentence_key']
     sentence_orig=record['value']['content']
-    log(f"Spellchecker received {sentence_key}")
+    # shard_id=hashtag()
+    # log(f"Spellchecker received {sentence_key} and my {shard_id}")
     # max edit distance per lookup (per single word, not per whole input string)
     suggestions = sym_spell.lookup_compound(sentence_orig, max_edit_distance=2,
                                         transfer_casing=True, ignore_non_words=True)
@@ -36,8 +37,8 @@ def symspell_sentences(record):
 
     value = suggestions[0].term
     if value:
-        execute('XADD', 'sentence_to_tokenise_{%s}' % hashtag(), '*', 'sentence_key', f"{sentence_key}","content",f"{value}")
-        log("Successfully spellchecked sentence "+str(sentence_key),level='notice')
+        execute('XADD', 'sentence_to_tokenise_{%s}' % hashtag(), '*', 'sentence_key', f"{sentence_key}",'content',f"{value}")
+        # log("Successfully spellchecked sentence "+str(sentence_key),level='notice')
     else:
         execute('SADD','spelling_screw_ups{%s}' % hashtag(), sentence_key)
 

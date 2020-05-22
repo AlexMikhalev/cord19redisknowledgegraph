@@ -2,14 +2,14 @@
 
 ## Phase 1
 
-- [ ]  rewrite intake:
+- [x]  rewrite intake:
     - [x]  JSON parse into Redis, creates:  article_id,paragraph_id
-    - [ ]  Redis paragraph split into sentences (BERT tokenised) into article_id, paragraph_id, sentence_id, sentence
+    - [x]  Redis paragraph split into sentences (BERT tokenised) into article_id, sentence_id, sentence
     - [x]  processed article keys are store cbloom in redis
 
 - [x]  Detect sentence language
 - [x]  Apply symspell
-- [ ]  tokenise sentence, storing model details in DB, input sentence, output tokenised sentence, with reference to table with model configuration
+- [x]  tokenise sentence, storing model details in DB, input sentence, output tokenised sentence, 
 - [ ]  Remove stopwords
 - [ ]  Expand abbreviations, store abbreviations dictionary in Redis (cache)
 

@@ -17,3 +17,7 @@ cd cord19redisknowledgegraph
 pip install gears-cli
 sh cluster_pipeline_events.sh
 ```
+# Start Redis Gears cluster
+```
+docker run -d -v $PWD/conf/docker-config.sh:/cluster/config.sh --name rgcluster -p 30001:30001 -p 30002:30002 -p 30003:30003 redislabs/rgcluster:latest
+```
