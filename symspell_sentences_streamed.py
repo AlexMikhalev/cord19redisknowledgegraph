@@ -36,7 +36,7 @@ def symspell_sentences(record):
 
     value = suggestions[0].term
     if value:
-        execute('XADD', 'sentence_to_tokenise_{%s}' % hashtag(), '*', 'sentence_key', f"{sentence_key}")
+        execute('XADD', 'sentence_to_tokenise_{%s}' % hashtag(), '*', 'sentence_key', f"{sentence_key}","content",f"{value}")
         log("Successfully spellchecked sentence "+str(sentence_key),level='notice')
     else:
         execute('SADD','spelling_screw_ups{%s}' % hashtag(), sentence_key)
