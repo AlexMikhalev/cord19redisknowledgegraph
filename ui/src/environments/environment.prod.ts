@@ -1,3 +1,4 @@
 export const environment = {
-  production: true
+  production: true,
+  redisUrl: 'ws://localhost:8000'
 };
