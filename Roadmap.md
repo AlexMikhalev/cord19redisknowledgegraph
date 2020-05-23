@@ -11,7 +11,7 @@
 - [x]  Apply symspell
 - [x]  tokenise sentence, storing model details in DB, input sentence, output tokenised sentence,
         - [ ]  Idea worth trying: add tokens to ids and feed into BART model deployed on RedisAI to create a summary of article.
-- [ ]  Remove stopwords
+- [x]  Remove stopwords
 - [ ]  Expand abbreviations, store abbreviations dictionary in Redis (cache)
 
 ## Phase 2

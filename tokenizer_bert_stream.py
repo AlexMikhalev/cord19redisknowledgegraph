@@ -1,3 +1,12 @@
+"""
+This is a tokenizer using pre-train Bio_Clinical BERT model.
+TODO: evaluate if using this as part of spacy-tokeniser on previous step.
+Challenge: memory consumption - scispacy small model takes 9 GB in RAM
+hence was the reason to split tokeniser into separate one. 
+Additional steps can be added by adding a stream instead of set.
+TODO: increase batch size: Transformers optimised for batch processing
+ increase batch size 
+"""
 tokenizer = None 
 
 
@@ -15,11 +24,12 @@ def tokenise_sentence(record):
     sentence_orig=record['value']['content']
     shard_id=hashtag()
     log(f"Tokeniser received {sentence_key} and my {shard_id}")
-    tokens = tokenizer.tokenize(sentence_orig)
+    tokens = set(tokenizer.tokenize(sentence_orig))
+    if STOP_WORDS:
+        tokens.difference_update(STOP_WORDS)
     key = "tokenized:bert:%s:{%s}" % (sentence_key,shard_id)
-    for token in tokens:
-        execute('lpush', key, token)
-        execute('SADD','processed_docs_stage3_tokenized{%s}' % shard_id, key)
+    execute('SADD', key, tokens)
+    execute('SADD','processed_docs_stage3_tokenized{%s}' % shard_id, key)
 
 
 bg = GearsBuilder('StreamReader')

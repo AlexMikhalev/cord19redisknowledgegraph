@@ -1,3 +1,6 @@
+"""
+This is easy to debug version of tokeniser
+"""
 tokenizer = None 
 
 
@@ -15,13 +18,18 @@ def tokenise_sentence(record):
     sentence_orig=record['value']
     # sentence_key=record['value']['sentence_key']
     # sentence_orig=record['value']['content']
+    try:
+        from spacy.lang.en.stop_words import STOP_WORDS
+    except:
+        log(f"Stop words are not available ")
     shard_id=hashtag()
     log(f"Tokeniser received {sentence_key} and my {shard_id}")
-    tokens = tokenizer.tokenize(sentence_orig)
+    tokens = set(tokenizer.tokenize(sentence_orig))
+    if STOP_WORDS:
+        tokens.difference_update(STOP_WORDS)
     key = "tokenized:bert:%s:{%s}" % (sentence_key,shard_id)
-    for token in tokens:
-        execute('lpush', key, token)
-        execute('SADD','processed_docs_stage3_tokenized', sentence_key)
+    execute('SADD', key, tokens)
+    execute('SADD','processed_docs_stage3_tokenized{%s}' % shard_id, key)
 
 
 bg = GearsBuilder()
