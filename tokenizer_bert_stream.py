@@ -23,12 +23,10 @@ def tokenise_sentence(record):
     sentence_key=record['value']['sentence_key']
     sentence_orig=record['value']['content']
     shard_id=hashtag()
-    log(f"Tokeniser received {sentence_key} and my {shard_id}")
-    tokens = set(tokenizer.tokenize(sentence_orig))
-    if STOP_WORDS:
-        tokens.difference_update(STOP_WORDS)
-    key = "tokenized:bert:%s:{%s}" % (sentence_key,shard_id)
-    execute('SADD', key, tokens)
+    # log(f"Tokeniser received {sentence_key} and my {shard_id}")
+    tokens = tokenizer.tokenize(sentence_orig)
+    for token in tokens:
+        execute('lpush', key, token)
     execute('SADD','processed_docs_stage3_tokenized{%s}' % shard_id, key)
 
 
