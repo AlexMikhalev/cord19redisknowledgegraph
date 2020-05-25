@@ -7,5 +7,5 @@ SELECT CONCAT(
     SELECT 'SET' as redis_cmd,
     CUI as redis_key,
     STR as redis_val
-    FROM MRCONSO where LAT='ENG' AND TS='P' AND STT='PF' AND ISPREF='Y' LIMIT 5
+    FROM MRCONSO where LAT='ENG' AND TS='P' AND STT='PF' AND ISPREF='Y'
 ) AS tablez

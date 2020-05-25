@@ -27,12 +27,13 @@ def tokenise_sentence(record):
     tokens = tokenizer.tokenize(sentence_orig)
     for token in tokens:
         execute('lpush', key, token)
-    execute('SADD','processed_docs_stage3_tokenized{%s}' % shard_id, key)
-    execute('XADD', 'tokeniser_to_matcher{%s}' % hashtag(), '*', 'sentence_key', f"{key}")
+        execute('SADD','processed_docs_stage3_tokenized{%s}' % shard_id, key)
+        # execute('XADD', 'tokeniser_to_matcher{%s}' % hashtag(), '*', 'sentence_key', f"{key}")
     log(f"Tokenised sentence {sentence_key} and my {shard_id}")
 
 
 bg = GearsBuilder('StreamReader')
 bg.foreach(tokenise_sentence)
+bg.count()
 bg.register('sentence_to_tokenise_*', batch=1, mode="async_local", onRegistered=loadTokeniser, onFailedPolicy='continue', trimStream=True)
 

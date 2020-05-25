@@ -20,8 +20,8 @@ def tokenise_sentence(record):
     global tokenizer
     if not tokenizer:
         tokenizer=loadTokeniser()
-    sentence_key=record['value']['sentence_key']
-    sentence_orig=record['value']['content']
+    sentence_key=record['key']
+    sentence_orig=record['value']
     shard_id=hashtag()
     key = "tokenized:bert:%s:{%s}" % (sentence_key,shard_id)
     tokens = tokenizer.tokenize(sentence_orig)
@@ -31,7 +31,7 @@ def tokenise_sentence(record):
     log(f"Tokenised sentence {sentence_key} and my {shard_id}")
 
 
-bg = GearsBuilder('StreamReader')
+bg = GearsBuilder()
 bg.foreach(tokenise_sentence)
 bg.count()
 bg.run('sentences:*')

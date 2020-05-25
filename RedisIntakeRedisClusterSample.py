@@ -76,7 +76,7 @@ for each_file in json_filenames:
     task=executor.submit(process_file,each_file,rediscluster_client)
     processed.append(task)
     counter+=1
-    if counter>100:
+    if counter>200:
         break
 
     
