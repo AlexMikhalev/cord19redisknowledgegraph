@@ -1,6 +1,26 @@
-#emit-particles-btn {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    font-size: 13px;
+@import "../scss/variables";
+
+.navbar{
+  height: 50px;
+}
+
+.search-form{
+  input{
+      width: 360px;
+      border-left: none;
+      background: #f8f9fc ;
+      border: none;
+      color: #6e707e;
+      font-weight: 400;
+
+      &:focus{
+          outline: none;
+      }
   }
+
+  .input-group-text{
+      background: $primary-color;
+      color: $white-color;
+      border-right: none;
+  }
+}

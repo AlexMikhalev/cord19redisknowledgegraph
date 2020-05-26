@@ -1,9 +1,12 @@
-import { Component, ViewChild, ElementRef, AfterViewInit, Input } from '@angular/core';
+import { Component, ViewChild, ElementRef, AfterViewInit, Input, OnInit, HostListener } from '@angular/core';
 
 declare var ForceGraph3D;
 import { Vector2 } from 'three';
 import { UnrealBloomPass } from '../../node_modules/three/examples/jsm/postprocessing/UnrealBloomPass.js';
 import { NgbModal, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { AppService } from './app.service.js';
+import { ifStmt } from '@angular/compiler/src/output/output_ast';
 
 @Component({
   selector: 'ngbd-modal-content',
@@ -37,12 +40,27 @@ export class NgbdModalContent {
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent implements AfterViewInit {
+export class AppComponent implements AfterViewInit, OnInit {
+  
   @ViewChild('graph', { static: true }) graph: ElementRef;
   Graph: any;
   gData: any;
+  searchForm: FormGroup;
+  canvasHeight: number;
 
-  constructor(private modalService: NgbModal){}
+  constructor(
+    private modalService: NgbModal, 
+    fb: FormBuilder,
+    private service: AppService){
+    this.searchForm = fb.group({
+      'term': ['', Validators.required]
+    });
+  }
+
+  ngOnInit(){
+    this.canvasHeight = window.innerHeight - 50;
+    this.service.fetchGraph(0);
+  }
 
   ngAfterViewInit(){
     this.initializeGraph(this.graph.nativeElement);
@@ -51,6 +69,12 @@ export class AppComponent implements AfterViewInit {
 
   initializeGraph(htmlElement) {
     // Random tree
+
+    this.service.graphData$.subscribe(graph => {
+      this.gData = {
+        nodes: graph.data.map(i => ({ id: i[0], name: i[1] }))
+      }
+    })
     const N = 50;
     this.gData = {
       nodes: [...Array(N).keys()].map(i => ({ id: i })),
@@ -72,39 +96,51 @@ export class AppComponent implements AfterViewInit {
     // this.Graph.onLinkClick(this.Graph.emitParticle); // emit particles on link click
     this.Graph.onNodeClick(this.onNodeClick.bind(this));
     this.Graph.onLinkClick(this.onLinkClick.bind(this));
+
+    // container layout
+    this.Graph.height(this.canvasHeight)
   }
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event) {
+    this.canvasHeight = window.innerHeight - 50;
+  }
+
 
   emitParticles(){
     [...Array(10).keys()].forEach(() => {
       const link = this.gData.links[Math.floor(Math.random() * this.gData.links.length)];
-      this.Graph.emitParticle(link);
-      
+      this.Graph.emitParticle(link);      
     });
     const modalRef = this.modalService.open(NgbdModalContent);
     modalRef.componentInstance.type = 'node';
   }
 
   onNodeClick(node, event){
-    console.log
-    console.log(node)
-    console.log(event)
     const modalRef = this.modalService.open(NgbdModalContent);
     modalRef.componentInstance.type = 'node';
+    modalRef.componentInstance.node = node;
   }
 
   onLinkClick(node, event){
-    console.log(node)
-    console.log(event)
     const modalRef = this.modalService.open(NgbdModalContent);
     modalRef.componentInstance.type = 'edge';
+    modalRef.componentInstance.edge = node;
   }
 
   postProcessing(){
-    const bloomPass = new UnrealBloomPass(new Vector2(128, 128), 0.7, 0.2, 0);
-    bloomPass.strength = 3;
-    bloomPass.radius = 1;
-    bloomPass.threshold = 0.1;
+    const strength = 0.7;
+    const radius = 0.2;
+    const threshold = 0;
+    const bloomPass = new UnrealBloomPass(new Vector2(128, 128), strength, radius, threshold);
     this.Graph.postProcessingComposer().addPass(bloomPass);
+  }
+
+
+  search(){
+    if(this.searchForm.valid){
+      this.service.search(this.searchForm.get('term').value);
+    }
   }
 
 }

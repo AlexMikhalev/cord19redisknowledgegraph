@@ -1,2 +1,19 @@
-<div id="3d-graph" #graph></div>
-<button id="emit-particles-btn" (click)="emitParticles()">Emit Particles</button>
+<nav class="navbar navbar-expand-lg">
+    <div class="container">
+        <div class="row flex-fill">
+            <a class="navbar-brand" routerLink="/">
+                Graph Visualization
+            </a>
+            <form class="form-inline search-form ml-2" [formGroup]="searchForm">
+                <div class="input-group">
+                    <input type="text" class="form-control" placeholder="search for covid term" aria-label="search"
+                        aria-describedby="search-icon" formControlName='term'>
+                    <div class="input-group-prepend" (click)="search('test')">
+                        <span class="input-group-text" id="search-icon"><i class="fa fa-search"></i></span>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</nav>
+<section id="3d-graph" #graph></section>

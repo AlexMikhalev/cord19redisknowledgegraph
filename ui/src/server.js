@@ -2,32 +2,31 @@ const
   argv = require('yargs')
     .require('p', 'Redis Port')
     .require('h', 'Redis Host')
-    .require('a', 'Redis Password')
+    // .require('a', 'Redis Password')
     .argv,
   redis   = require('redis'),
   express = require('express'),
   expressWs = require('express-ws'),
   _   = require('lodash'),
-  ve = require('visibleengine'),
+  // ve = require('visibleengine'),
   app = expressWs(express()).app;
 
 redis.addCommand('graph.query');
 
-let websocket = ve.websocket.init();
-let myVe = ve.createEngine(
-  websocket.eventResponse, 
-  {
-    uniqueId : true
-  }
-);
-myVe.addWatch('search-graph');
+// let websocket = ve.websocket.init();
+// let myVe = ve.createEngine(
+//   websocket.eventResponse, 
+//   {
+//     uniqueId : true
+//   }
+// );
+// myVe.addWatch('search-graph');
 
-let
-  client = myVe.client(redis.createClient({
+let client = redis.createClient({
     port      : argv.p,
     host      : argv.h,
-    password  : argv.a
-  }),'search-graph');
+    // password  : argv.a
+  });
 
 function nodesToObj(aNode) {
   let innerNode = aNode[0];
@@ -38,12 +37,18 @@ function nodesToObj(aNode) {
 app.ws('/search',function(ws, req) {
   ws.on('message', function(search) {
     if (ws.readyState === 1) {
-      client.graph_query('MAMMALS', `CALL db.idx.fulltext.queryNodes('Species','${search}')`,function(err,response) {
+      client.graph_query('cord19medical', `CALL db.idx.fulltext.queryNodes('entity','${search}')`,function(err,response) {
         if (err) { throw err }
         let nodes = response[1];
-        ws.send(JSON.stringify(nodes.map(nodesToObj)));
+        // ws.send(JSON.stringify(nodes.map(nodesToObj)));
+        console.log(search)
+        ws.send(JSON.stringify({ message: search }));
       });
     }
+  });
+
+  ws.on('close', () => {
+    console.log('WebSocket was closed')
   });
 });
 
@@ -52,23 +57,27 @@ app.ws('/graph',function(ws, req) {
     if (ws.readyState === 1) {
       let search = JSON.parse(searchJSON);
       client.graph_query(
-        'MAMMALS', 
-        `MATCH (s:Species)-[*]->(x)<-[*]-(c:Species) WHERE c.fullname = '${search.left}' AND s.fullname = '${search.right}'  RETURN x.name, labels(x) LIMIT 1`,
+        'cord19medical', 
+        `MATCH (e:entity)-[r:related]->(t:entity) RETURN e.id,e.name, t.id, t.name, r.article LIMIT 5`,
         function(err,response) {
           if (err) { throw err; }
           ws.send(JSON.stringify({
-            'taxonomicCategory' : response[1][0][1],
-            'taxonomicValue'    : response[1][0][0],
-            'search'            : search
+            'data': response[1],
+            'labels': response[0],
+            'search': search
           }));
         }
       );
     }
   });
+
+  ws.on('close', () => {
+    console.log('WebSocket was closed')
+  });
 });
 
-app.use(express.static('dist'));
-app.ws('/ve',websocket.expressWs)
+// app.use(express.static('dist'));
+// app.ws('/ve',websocket.expressWs)
 app.listen(4444, function(err) {
   if (err) { throw err; }
   console.log('Listening on 4444');

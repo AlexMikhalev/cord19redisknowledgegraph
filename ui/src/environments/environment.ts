@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  redisUrl: 'ws://localhost:8000'
+  redisUrl: 'ws://localhost:4444'
 };
 
 /*
