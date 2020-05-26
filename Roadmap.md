@@ -30,7 +30,7 @@
 - [ ] Idea worth trying: Use write behind pattern to automatically map nodes and edges into Redis Graph
 
 ## Phase 3
-
+- [ ] Create a node Article with attributes {id}, title, sentence_key:sentence
 - [ ]  Visualisation D3
 - [ ]  search terms matched into aho corasic
 - [ ]  nodes + edges
