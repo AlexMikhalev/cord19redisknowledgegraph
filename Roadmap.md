@@ -11,20 +11,22 @@
 - [x]  Apply symspell
 - [x]  tokenise sentence, storing model details in DB, input sentence, output tokenised sentence,
         - [ ]  Idea worth trying: add tokens to ids and feed into BART model deployed on RedisAI to create a summary of article.
+        - [] change tokeniser in two parts so output is ids and written into tensor to be fed into RedisAI BART model for summary of the article (parked)
+  [ ]  change tokeniser so output is strings (return as strings from tokeniser), add stopwords and punctuation removal into the same step 
 - [x]  Remove stopwords
 - [ ]  Expand abbreviations, store abbreviations dictionary in Redis (cache)
 
 ## Phase 2
 
-- [ ]  Match tokens to OWL ready search token to canonical term, store:
+- [x]  Match tokens to OWL ready search token to canonical term, store:
     - canonical_term, sentence_key
     - synonim, sentence_key
-- [ ]  Create Aho corasick from above - need for matching input as well
-- [ ]  Form pairs and create:
-    - [ ]  node, rank
-        - [ ]  set of article_keys mapped to node
-    - [ ]  edge, rank
-        - [ ]  set of article_key mapped to edge
+- [x]  Create Aho corasick from above - need for matching input as well
+- [x]  Form pairs and create:
+    - [x]  node, rank
+        - [x]  set of article_keys mapped to node
+    - [x]  edge, rank
+        - []  set of article_key mapped to edge
 - [ ] Idea worth trying: Use write behind pattern to automatically map nodes and edges into Redis Graph
 
 ## Phase 3
