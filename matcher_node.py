@@ -100,9 +100,6 @@ for each_item in all_lists_processed:
                 source_entity_id=pair[0][0]
                 destination_entity_id=pair[1][0]
                 sentence_key=":".join(item.split(':')[2:-1])
-                redis_client.hincrby(f'nodes{source_entity_id}' ,'rank',1)
-                redis_client.hincrby(f'nodes:{destination_entity_id}','rank',1)
-                redis_client.hincrby("edges:{:s}:{:s}:{:s}".format(sentence_key,source_entity_id,destination_entity_id),'rank',1)
                 label_source=redis_client.get(source_entity_id)
                 label_destination=redis_client.get(destination_entity_id)
 
@@ -114,8 +111,17 @@ for each_item in all_lists_processed:
                 source_canonical_name=re.sub('[^A-Za-z0-9]+', '_', str(label_source))
                 destination_canonical_name=re.sub('[^A-Za-z0-9]+', '_', str(label_destination))
 
-                source_node=Node(label=source_entity_id, properties={'id':source_entity_id,'rank':1})
-                destination_node=Node(label=destination_entity_id,properties={'id':destination_entity_id,'rank':1})
+                redis_client.hsetnx(f'nodes:{source_entity_id}','id',source_entity_id)
+                redis_client.hsetnx(f'nodes:{source_entity_id}','name',source_canonical_name)
+                redis_client.hsetnx(f'nodes:{destination_entity_id}','id',destination_entity_id)
+                redis_client.hsetnx(f'nodes:{destination_entity_id}','name',destination_canonical_name)
+                redis_client.hincrby(f'nodes:{source_entity_id}' ,'rank',1)
+                redis_client.hincrby(f'nodes:{destination_entity_id}','rank',1)
+                redis_client.hincrby("edges:{:s}:{:s}:{:s}".format(sentence_key,source_entity_id,destination_entity_id),'rank',1)
+
+
+                source_node=Node(label='entity', properties={'id':source_entity_id,'rank':1,'name':source_canonical_name})
+                destination_node=Node(label='entity',properties={'id':destination_entity_id,'rank':1,'name':destination_canonical_name})
                 redis_graph.add_node(source_node)
                 redis_graph.add_node(destination_node)
                 edge = Edge(source_node, 'related', destination_node, properties={'article': sentence_key})
