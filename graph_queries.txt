@@ -1,0 +1,3 @@
+GRAPH.QUERY cord19medical "MATCH (n:entity) RETURN count(n) as entity_count"
+
+GRAPH.QUERY cord19medical  "MATCH (e:entity)-[:related]->(t:entity) RETURN e.id,e.name, t.id, t.name LIMIT 5"
