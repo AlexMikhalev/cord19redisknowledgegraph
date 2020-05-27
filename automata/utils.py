@@ -1,9 +1,14 @@
+from common.utils import *
+
 def loadAutomata():
     from urllib.request import urlopen
     import ahocorasick 
     import joblib
-    # Automata=joblib.load(urlopen("https://github.com/AlexMikhalev/cord19redisknowledgegraph/raw/master/automata/automata_syns.pkl.bz2"))
-    Automata=joblib.load("./automata/automata_syns.pkl.bz2")
+    try:
+        Automata=joblib.load("./automata/automata_syns.pkl.bz2")
+    except:
+        Automata=joblib.load(urlopen("https://github.com/AlexMikhalev/cord19redisknowledgegraph/raw/master/automata/automata_syns.pkl.bz2"))
+    
     log("Automata properties" + str(Automata.get_stats()))
     return Automata
 

@@ -1,7 +1,4 @@
 #FIXME create a string based tokens 
-import sys
-from datetime import datetime
-from pathlib import Path
 import ujson as json
 
 import redis
@@ -9,29 +6,7 @@ import redis
 from redis.exceptions import ResponseError
 from rediscluster import RedisCluster
 
-
 import re
-
-LOG_PATH = Path('./logs/')
-LOG_PATH.mkdir(exist_ok=True)
-
-import logging
-run_start_time = datetime.today().strftime('%Y-%m-%d_%H-%M-%S')
-logfile = str(LOG_PATH/'log-{}-{}.txt'.format(run_start_time, "Matching entities"))
-
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(levelname)s - %(name)s -   %(message)s',
-    datefmt='%m/%d/%Y %H:%M:%S',
-    handlers=[
-        logging.FileHandler(logfile),
-        logging.StreamHandler(sys.stdout)
-    ])
-
-logger = logging.getLogger()
-log=logger.info
-
-
 
 import config
 rc_list=json.loads(config.config(section='rediscluster')['rediscluster'])

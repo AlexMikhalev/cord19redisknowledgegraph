@@ -1,4 +1,6 @@
-#FIXME create a string based tokens 
+#FIXME create a string based tokens on previous step 
+# TODO: this script needs to be split into populating redis structures (done) 
+# TODO: map redis hdicts into Redis Graph using write behind pattern from gears 
 import sys
 from datetime import datetime
 from pathlib import Path
@@ -108,6 +110,7 @@ for each_item in all_lists_processed:
 
                 if not label_destination:
                     label_destination=pair[1][1]
+                #TODO: check if redis graph more acceptable to names with spaces (Neo4j isn't)
                 source_canonical_name=re.sub('[^A-Za-z0-9]+', '_', str(label_source))
                 destination_canonical_name=re.sub('[^A-Za-z0-9]+', '_', str(label_destination))
 

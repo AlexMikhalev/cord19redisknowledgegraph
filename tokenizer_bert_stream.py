@@ -6,6 +6,9 @@ hence was the reason to split tokeniser into separate one.
 Additional steps can be added by adding a stream instead of set.
 TODO: increase batch size: Transformers optimised for batch processing
  increase batch size 
+TODO: split this step in two: one to return strings from tokeniser and another ids
+TODO: take ids from tokens and feed into RedisAI for BART based article summarisation
+TODO: amend next step to take strings as input instead of list
 """
 tokenizer = None 
 
