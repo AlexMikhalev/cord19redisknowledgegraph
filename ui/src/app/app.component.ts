@@ -1,12 +1,16 @@
 import { Component, ViewChild, ElementRef, AfterViewInit, Input, OnInit, HostListener } from '@angular/core';
 
 declare var ForceGraph3D;
+declare var ForceGraphVR;
+declare var ForceGraphAR;
+
 import { Vector2 } from 'three';
 import { UnrealBloomPass } from '../../node_modules/three/examples/jsm/postprocessing/UnrealBloomPass.js';
 import { NgbModal, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { AppService } from './app.service.js';
-import { ifStmt } from '@angular/compiler/src/output/output_ast';
+import { Observable } from 'rxjs';
+import { of } from 'rxjs/';
 
 @Component({
   selector: 'ngbd-modal-content',
@@ -47,6 +51,9 @@ export class AppComponent implements AfterViewInit, OnInit {
   gData: any;
   searchForm: FormGroup;
   canvasHeight: number;
+  mode = '3D';
+  searchResults$: Observable<any> = of({ nodes: [], links: []});
+  edgeResults$: Observable<any[]>;
 
   constructor(
     private modalService: NgbModal, 
@@ -59,35 +66,52 @@ export class AppComponent implements AfterViewInit, OnInit {
 
   ngOnInit(){
     this.canvasHeight = window.innerHeight - 50;
-    this.service.fetchGraph(0);
+    // this.service.fetchGraph(0);
   }
 
   ngAfterViewInit(){
-    this.initializeGraph(this.graph.nativeElement);
+    this.searchResults$.subscribe(x => {
+      this.gData = x;
+      this.initializeGraph()
+    }, (err)=>{
+      console.log(err);
+    });
     this.postProcessing();
+    this.edge()
   }
 
-  initializeGraph(htmlElement) {
+  initializeGraph() {
     // Random tree
 
-    this.service.graphData$.subscribe(graph => {
-      this.gData = {
-        nodes: graph.data.map(i => ({ id: i[0], name: i[1] }))
-      }
-    })
-    const N = 50;
-    this.gData = {
-      nodes: [...Array(N).keys()].map(i => ({ id: i })),
-      links: [...Array(N).keys()]
-        .filter(id => id)
-        .map(id => ({
-          source: id,
-          target: Math.round(Math.random() * (id - 1))
-        }))
-    };
+    // this.service.graphData$.subscribe(graph => {
+    //   this.gData = {
+    //     nodes: graph.data.map(i => ({ id: i[0], name: i[1] }))
+    //   }
+    // })
+    // const N = 50;
+    // this.gData = {
+    //   nodes: [...Array(N).keys()].map(i => ({ id: i })),
+    //   links: [...Array(N).keys()]
+    //     .filter(id => id)
+    //     .map(id => ({
+    //       source: id,
+    //       target: Math.round(Math.random() * (id - 1))
+    //     }))
+    // };
 
-    this.Graph = ForceGraph3D()
-      (htmlElement)
+    // switch(this.mode){
+    //   case '3D':
+    //     this.Graph = ForceGraph3D();
+    //   case 'VR':
+    //     this.Graph = ForceGraphVR();
+    //   case 'AR':
+    //     console.log('AR mode')
+    //     this.Graph = ForceGraphAR();
+    //   default:
+    //     this.Graph = ForceGraph3D();
+    // }
+    this.Graph = ForceGraph3D();
+    this.Graph(this.graph.nativeElement)
       .linkDirectionalParticleColor(() => 'red')
       .linkDirectionalParticleWidth(4)
       .linkHoverPrecision(10)
@@ -107,14 +131,14 @@ export class AppComponent implements AfterViewInit, OnInit {
   }
 
 
-  emitParticles(){
-    [...Array(10).keys()].forEach(() => {
-      const link = this.gData.links[Math.floor(Math.random() * this.gData.links.length)];
-      this.Graph.emitParticle(link);      
-    });
-    const modalRef = this.modalService.open(NgbdModalContent);
-    modalRef.componentInstance.type = 'node';
-  }
+  // emitParticles(){
+  //   [...Array(10).keys()].forEach(() => {
+  //     const link = this.gData.links[Math.floor(Math.random() * this.gData.links.length)];
+  //     this.Graph.emitParticle(link);      
+  //   });
+  //   const modalRef = this.modalService.open(NgbdModalContent);
+  //   modalRef.componentInstance.type = 'node';
+  // }
 
   onNodeClick(node, event){
     const modalRef = this.modalService.open(NgbdModalContent);
@@ -139,8 +163,12 @@ export class AppComponent implements AfterViewInit, OnInit {
 
   search(){
     if(this.searchForm.valid){
-      this.service.search(this.searchForm.get('term').value);
+      this.searchResults$ = this.service.searchApi(this.searchForm.get('term').value);
     }
+  }
+
+  edge(){
+    this.edgeResults$ = this.service.edgeApi('C5162902', 'C5190121');
   }
 
 }

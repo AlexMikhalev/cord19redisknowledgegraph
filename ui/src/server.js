@@ -41,7 +41,7 @@ app.ws('/search',function(ws, req) {
         if (err) { throw err }
         let nodes = response[1];
         // ws.send(JSON.stringify(nodes.map(nodesToObj)));
-        console.log(search)
+        console.log(nodes)
         ws.send(JSON.stringify({ message: search }));
       });
     }
