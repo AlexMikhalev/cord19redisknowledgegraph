@@ -31,5 +31,9 @@ docker run -d -v $PWD/conf/docker-config.sh:/cluster/config.sh --name rgcluster 
  redis-trib.py execute --addr 10.144.17.211:30001 CONFIG SET proto-max-bulk-len 2048mb
  ```
  
+ Look at 
+ submissionredishack.md 
+ 
+
 
 

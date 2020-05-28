@@ -1,8 +1,8 @@
 #!flask/bin/python
 from flask import Flask, jsonify, request,json
-
+from flask_cors import CORS
 app = Flask(__name__)
-
+CORS(app)
 from automata.utils import *
 import itertools
 """
@@ -64,6 +64,7 @@ def create_task():
         edge_call=redis_client.hgetall(f'edges:{source_entity_id}:{destination_entity_id}')
         edge={'source':source_entity_id,'target':destination_entity_id}
         if edge_call:
+            log("Edge call"+str(edge_call))
             links.append(edge)
         else:
             #FIXME: made up for demo: always returns link even if it doesn't exists.
@@ -72,9 +73,13 @@ def create_task():
         source_node=redis_client.hgetall(f'nodes:{source_entity_id}')
         if source_node:
             nodes.append(source_node)
+        else:
+            nodes.append({'id':source_entity_id,'name':source_entity_id})
         destination_node=redis_client.hgetall(f'nodes:{destination_entity_id}')
         if destination_node:
-            nodes.append(source_node)
+            nodes.append(destination_node)
+        else:
+            nodes.append({'id':destination_entity_id,'name':destination_entity_id})
 
     search_result={
         'nodes': nodes,
@@ -83,5 +88,5 @@ def create_task():
     return jsonify({'search_result': search_result}), 200
 
 if __name__ == "__main__":
-    app.run(port=8181, host='10.144.17.211')
+    app.run(port=8181, host='0.0.0.0')
 

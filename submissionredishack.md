@@ -65,3 +65,5 @@ SECONDS=0
 python matcher_node.py 
 echo "matcher_node.py finished in $SECONDS seconds."
 ```
+
+Ways to test search:
