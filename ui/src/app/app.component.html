@@ -6,7 +6,7 @@
             </a>
             <form class="form-inline search-form ml-2" [formGroup]="searchForm">
                 <div class="input-group">
-                    <input type="text" class="form-control" placeholder="search for covid term" aria-label="search"
+                    <input type="text" class="form-control" placeholder="search for medical knowledge" aria-label="search"
                         aria-describedby="search-icon" formControlName='term'>
                     <div class="input-group-prepend" (click)="search('test')">
                         <span class="input-group-text" id="search-icon"><i class="fa fa-search"></i></span>
@@ -18,8 +18,8 @@
                 <button class="btn btn-outline-primary" id="dropdownBasic1" ngbDropdownToggle>Change Viewport</button>
                 <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
                     <button ngbDropdownItem>3D</button>
-                    <button ngbDropdownItem>VR</button>
-                    <button ngbDropdownItem>AR</button>
+                    <button ngbDropdownItem>VR (Coming Soon)</button>
+                    <button ngbDropdownItem>AR (Coming Soon)</button>
                 </div>
             </div>
         </div>

@@ -17,26 +17,36 @@ import { of } from 'rxjs/';
   template: `
     <div class="modal-header">
       <h4 class="modal-title" *ngIf="type == 'node'">Node Data</h4>
-      <h4 class="modal-title" *ngIf="type == 'edge'">Edge Data</h4>
+      <h4 class="modal-title" *ngIf="type == 'edge'">{{ (edgeResults$ | async)?.title }}</h4>
       <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
         <span aria-hidden="true">&times;</span>
       </button>
     </div>
     <div class="modal-body">
       <p *ngIf="type == 'node'">Hello, Node data will be viewed here!</p>
-      <p *ngIf="type == 'edge'">Hello, Edge data will be viewed here!</p>
+      <p *ngIf="type == 'edge'">
+        {{ (edgeResults$ | async)?.sentence }}
+      </p>
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-outline-dark" (click)="activeModal.close('Close click')">Close</button>
     </div>
   `
 })
-export class NgbdModalContent {
+export class NgbdModalContent implements OnInit{
   @Input() type;
   @Input() node;
-  @Input() edges;
+  @Input() edge;
 
-  constructor(public activeModal: NgbActiveModal) {}
+  edgeResults$: any;
+
+  constructor(
+    public activeModal: NgbActiveModal,
+    private service: AppService) {}
+
+  ngOnInit(){
+    this.edgeResults$ = this.service.edgeApi(this.edge.source.id, this.edge.target.id);
+  }
 }
 
 @Component({
@@ -70,14 +80,7 @@ export class AppComponent implements AfterViewInit, OnInit {
   }
 
   ngAfterViewInit(){
-    this.searchResults$.subscribe(x => {
-      this.gData = x;
-      this.initializeGraph()
-    }, (err)=>{
-      console.log(err);
-    });
-    this.postProcessing();
-    this.edge()
+    // this.postProcessing();
   }
 
   initializeGraph() {
@@ -160,15 +163,16 @@ export class AppComponent implements AfterViewInit, OnInit {
     this.Graph.postProcessingComposer().addPass(bloomPass);
   }
 
-
   search(){
     if(this.searchForm.valid){
-      this.searchResults$ = this.service.searchApi(this.searchForm.get('term').value);
+      this.service.searchApi(this.searchForm.get('term').value).subscribe(x => {
+        this.gData = x;
+        this.initializeGraph();
+      }, (err) => {
+        console.log('search error');
+        console.log(err);
+      });
     }
-  }
-
-  edge(){
-    this.edgeResults$ = this.service.edgeApi('C5162902', 'C5190121');
   }
 
 }

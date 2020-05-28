@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import {webSocket, WebSocketSubject} from 'rxjs/webSocket';
 import { environment } from 'src/environments/environment';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 
@@ -56,9 +56,7 @@ export class AppService {
   edgeApi(source: string, target: string): Observable<any>{
     const edgeUri= `http://10.144.17.211:8181/edge/edges:${source}:${target}`
     return this.http.get<any>(edgeUri).pipe(map((data) => {
-      console.log(data)
       return data.results;
     }));
-  
   }
 }
