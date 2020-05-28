@@ -67,3 +67,6 @@ echo "matcher_node.py finished in $SECONDS seconds."
 ```
 
 Ways to test search:
+```
+curl -i -H "Content-Type: application/json" -X POST -d {"""search""":"""SARS Hypothesis Generation family"""} "http://10.144.17.211:8181/search"
+```
