@@ -88,5 +88,5 @@ def create_task():
     return jsonify({'search_result': search_result}), 200
 
 if __name__ == "__main__":
-    app.run(port=8181, host='0.0.0.0')
+    app.run(port=8181, host='10.144.17.211')
 
