@@ -50,53 +50,57 @@ def find_matches(sent_text, A):
             longest_matched_ents.append(matched_ent)
     return [t for t in longest_matched_ents if len(t[1])>3] 
 
+if __name__ == "__main__":
+    """
+    This is matcher node hash: it builds a hash structure in Redis with aim to prepare for 
+    RedisSearch population 
+    """
+    Automata=loadAutomata()
 
-Automata=loadAutomata()
+    num_sents = 0 
+    # all_lists_processed=rediscluster_client.keys('processed_docs_stage3_tokenized*')
+    all_lists_processed=rediscluster_client.keys('processed_docs_stage3_tokenized{1x3}')
 
-num_sents = 0 
-# all_lists_processed=rediscluster_client.keys('processed_docs_stage3_tokenized*')
-all_lists_processed=rediscluster_client.keys('processed_docs_stage3_tokenized{1x3}')
+    for each_item in all_lists_processed:
+        sentences_list=rediscluster_client.smembers(each_item)
+        for item in sentences_list:
+            tokens=set(rediscluster_client.lrange(item,0,-1))
+            tokens.difference_update(STOP_WORDS)
+            tokens.difference_update(set(punctuation)) 
+            matched_ents = find_matches(" ".join(tokens), Automata)
+            if len(matched_ents)<1:
+                log("Error matching sentence "+item)
+            else:
+                for pair in itertools.combinations(matched_ents, 2):
+                    source_entity_id=pair[0][0]
+                    destination_entity_id=pair[1][0]
+                    sentence_key=":".join(item.split(':')[2:-1])
+                    label_source=redis_client.get(source_entity_id)
+                    label_destination=redis_client.get(destination_entity_id)
 
-for each_item in all_lists_processed:
-    sentences_list=rediscluster_client.smembers(each_item)
-    for item in sentences_list:
-        tokens=set(rediscluster_client.lrange(item,0,-1))
-        tokens.difference_update(STOP_WORDS)
-        tokens.difference_update(set(punctuation)) 
-        matched_ents = find_matches(" ".join(tokens), Automata)
-        if len(matched_ents)<1:
-            log("Error matching sentence "+item)
-        else:
-            for pair in itertools.combinations(matched_ents, 2):
-                source_entity_id=pair[0][0]
-                destination_entity_id=pair[1][0]
-                sentence_key=":".join(item.split(':')[2:-1])
-                label_source=redis_client.get(source_entity_id)
-                label_destination=redis_client.get(destination_entity_id)
+                    if not label_source:
+                        label_source=pair[0][1]
 
-                if not label_source:
-                    label_source=pair[0][1]
+                    if not label_destination:
+                        label_destination=pair[1][1]
+                    source_canonical_name=re.sub('[^A-Za-z0-9]+', '_', str(label_source))
+                    destination_canonical_name=re.sub('[^A-Za-z0-9]+', '_', str(label_destination))
 
-                if not label_destination:
-                    label_destination=pair[1][1]
-                source_canonical_name=re.sub('[^A-Za-z0-9]+', '_', str(label_source))
-                destination_canonical_name=re.sub('[^A-Za-z0-9]+', '_', str(label_destination))
+                    redis_client.hsetnx(f'nodes:{source_entity_id}','id',source_entity_id)
+                    redis_client.hsetnx(f'nodes:{source_entity_id}','name',source_canonical_name)
+                    redis_client.hsetnx(f'nodes:{destination_entity_id}','id',destination_entity_id)
+                    redis_client.hsetnx(f'nodes:{destination_entity_id}','name',destination_canonical_name)
+                    redis_client.hincrby(f'nodes:{source_entity_id}' ,'rank',1)
+                    redis_client.hincrby(f'nodes:{destination_entity_id}','rank',1)
+                    #FIXME: that should be a list appended to source/destination hash: 
+                    # split into article + attributes + connection and rank
+                    # redis_client.hsetnx(f'edges:{source_entity_id}:{destination_entity_id}','skey',sentence_key)
+                    redis_client.zincrby(f'edges_scored:{source_entity_id}:{destination_entity_id}',1, sentence_key)
+                    redis_client.hincrby(f'edges:{source_entity_id}:{destination_entity_id}','rank',1)
 
-                redis_client.hsetnx(f'nodes:{source_entity_id}','id',source_entity_id)
-                redis_client.hsetnx(f'nodes:{source_entity_id}','name',source_canonical_name)
-                redis_client.hsetnx(f'nodes:{destination_entity_id}','id',destination_entity_id)
-                redis_client.hsetnx(f'nodes:{destination_entity_id}','name',destination_canonical_name)
-                redis_client.hincrby(f'nodes:{source_entity_id}' ,'rank',1)
-                redis_client.hincrby(f'nodes:{destination_entity_id}','rank',1)
-                #FIXME: that should be a list appended to source/destination hash: 
-                # split into article + attributes + connection and rank
-                # redis_client.hsetnx(f'edges:{source_entity_id}:{destination_entity_id}','skey',sentence_key)
-                redis_client.zincrby(f'edges_scored:{source_entity_id}:{destination_entity_id}',1, sentence_key)
-                redis_client.hincrby(f'edges:{source_entity_id}:{destination_entity_id}','rank',1)
+            if num_sents % 100 == 0:
+                log(f"... {num_sents} sentences ")
+            num_sents+=1
+            log("Flushing graph for sentence %s " % sentence_key)
 
-        if num_sents % 100 == 0:
-            log(f"... {num_sents} sentences ")
-        num_sents+=1
-        log("Flushing graph for sentence %s " % sentence_key)
-
-logger.info("Completed")
+    logger.info("Completed")
