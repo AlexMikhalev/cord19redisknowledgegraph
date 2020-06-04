@@ -10,7 +10,7 @@ Welcome to Yggdrasil: Covid19 - Redis Knowledge Graph's documentation!
    Roadmap
    submissionredishack
 
-First attempt to create documentation, so far best content inside ./submissionhack
+First attempt to create documentation, so far best content inside submissionhack
 
 Architecture Diagram
 --------------------
