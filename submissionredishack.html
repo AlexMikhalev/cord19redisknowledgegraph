@@ -1,0 +1,182 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Vision &#8212; Yggdrasil: Covid19 - Redis Knowledge Graph 0.1 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <script src="https://unpkg.com/mermaid@8.4.8/dist/mermaid.min.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Project tasks/Roadmap:" href="Roadmap.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="vision">
+<h1>Vision<a class="headerlink" href="#vision" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><p>Search or rather information exploration should be spatial preferably in VR (memory palace, see Theatre of Giulio Camillo). A force-directed graph is a path towards it, where visual assisted by text — relevant text pops up on the connection and where people explore the concepts and then dig deeper into text.</p></li>
+<li><p>When I am exploring topics on science or engineering, I look at the diversity of the opinion, not the variety of the same cluster of words, same thought. I want to avoid confirmation bias. I want to find articles relevant to the same concept, not necessary the ones which have similar words.</p></li>
+</ul>
+</div>
+<div class="section" id="mission">
+<h1>Mission<a class="headerlink" href="#mission" title="Permalink to this headline">¶</a></h1>
+<p>To build a natural language processing pipeline, capable of handling a large number of documents and concepts, incorporating System 1 AI (fast, intuitive reasoning) and System 2 (high-level reasoning) and then present knowledge in a modern VR/AR visualisation. Knowledge should be re-usable and shareable.</p>
+</div>
+<div class="section" id="goal">
+<h1>Goal<a class="headerlink" href="#goal" title="Permalink to this headline">¶</a></h1>
+<p>Build NLP pipeline leveraging Redis ecosystem whenever possible. We use COVID 19 (CORD19) medical articles corpus as input and experience of participation in the Kaggle CORD19 concept. My major challenge of CORD19 competition was running out of memory/storage and loosing processed steps, building and re-loading snapshots while leveraging modern frameworks like spacy/pytorch. Overall I missed about a week in the competition by re-processing the data. Hence this implementation designed to avoid running out of memory, taking baby steps initially.</p>
+</div>
+<div class="section" id="implementation">
+<h1>Implementation<a class="headerlink" href="#implementation" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><p>Ingest documents: RedisIntakeRedisCluster.py parses documents taking out body_text and saves under paragraphs:{article_id} in Redis cluster. Why the redis cluster needed? From experience on Kaggle, I know single instance Redis Server will run out of memory. Nothing fancy, ingest works fast.</p></li>
+<li><p>Detect language: lang_detect_gears_paragraphs.py. Uses Redis Gears by registering key reader on ‘paragraphs:*’. One of the surprises in the challenge was that not all medical literature was in English.</p></li>
+<li><p>Split paragraphs into sentences: spacy_sentences_geared.py. This is where the process becomes interesting; I wanted to use spacy and intelligent parser spacy provides, without the penalty for memory and time required to process. I disabled NER and Tagging components en_core_web_sm.load(disable=[‘ner’,’tagger’]). With the help of Meir Shpilraien from RedisLabs script evolved into symspell_sentences_streamed.py - using streams to process articles.</p></li>
+<li><p>symspell_sentences_streamed.py As I noticed most of the articles are OCR scans, not even spellchecked. Before tokenising, I wanted to make sure it’s spellchecked. The script uses symspell library and Redis Gears and stream reader.</p></li>
+<li><p>Process sentences into tokens: tokenizer_bert_stream.py. The step uses transformers BERT based tokeniser specifically adapted to clinical research Bio_ClinicalBERT. It also uses streams as I found them being more reliable than key readers. The deployment was tricky: while RedisLabs strives towards exceptional standards in engineering (Redis Cluster node with Gears takes 6MB RAM), the rest of the industry makes different assumptions about storage/memory available (pytorch library alone 900 Mb). Again with the help of Meir Shpilraien, we managed to get it working, and there is a ticket in GitHub with discussion. In the end, it worked brilliantly (fast). BERT based tokenisation allows two path - one is via strings matching, where tokens processed as strings, and another (to be explored) where tokens converted to ids and used to feed other ML model like BART for article summarisation. While each of those steps are small and may not look nessesary useful, same pre-processing using Spacy and scispacy raised two challenges: both spacy and scispacy are memory hungry: 9GB RAM on load and processing requires dedicated hardware and a lot of time. Those set of scripts run on commodity server (s) in the background and distribute compute and memory keys evenly. My dream is not to lose data during processing. See demo video.</p></li>
+<li><p>Prepare Methathesaurus (UMLS): UMLS was loaded into MySQL following UMLS instruction (see sql_import/README.MD and loaded into Redis sql_import/cui_term.sql. While it took time to understand data model, the overall experience of mapping UMLS into Redis was pretty flawless - I could have avoided MySQL use.</p></li>
+<li><p>Build Aho-Corasick automata: aho_corasick_intake.py This script takes the dump of words to Concept Unique Identifiers (CUI) and creates an Automata. Aho-Corasik is a superb algorithm for the task of matching terms in sentences. It takes a few minutes to run on all medical terms and their variations as per UMLS and output 30 MB Automata (bziped)</p></li>
+<li><p>Matcher: This matcher_node.py script breaks architectural pattern to use Gears/Streams and SHF type of collection. The purpose: we now have a set of tokens, automata to match them into concepts and Redis Graph to be populated with concepts (Nodes) and their relationship (articles).
+Each relationship corresponds to the article as they were formed by matching relevant terms from articles into the corresponding edge. This simple step allows to create an information/knowledge dimension: we can create nodes (terms) and relationship (set of articles), but because nodes use industry standard ontology, they can be leveraged by different graphs and different visualisation techniques, it is now possible to build different visualisation on top of it: i.e. if you want to find an articles relevant to body part or medical condition (“bleeding”) it is now possible using just traversal of graph database using Cyther. Obviously, it is now also possible to find most important concepts using PageRank algorithm <code class="docutils literal notranslate"><span class="pre">GRAPH.QUERY</span> <span class="pre">cord19medical</span> <span class="pre">&quot;CALL</span> <span class="pre">algo.pageRank('entity','related')&quot;</span></code>. Why use matcher instead of RedisSearch? Initially, I didn’t know about the integration of RedisSearch/RedisGraph, it’s something to be explored and exploited, while RedisSearch state of the art in the search industry, it is build based on different concepts and assumptions to the ones I needed: I want to avoid TFIDF.</p></li>
+<li><p>API server: app.py This server build to help support Visualisation development for Brian, it mimics the behaviour of Redis Graphs (in parts I need) and have two APIs /search and /edge. Search API returns nodes and links and edge API fetches all necessary information about article relevant to the link (edge). It’s powered by Redis (local), and matcher_node_hash.py builds necessary data structures (without populating them in RedisGraph). Further work would be to map those into RedisGraph: at the moment matcher_node.py hammers RedisGraph and is trying to create node/relationship even if it already exists. matcher_node_hash only create Redis structures.</p></li>
+<li><p>Visualisation: &#64;mcwachanga created a Angular 3D based visualisation using force-directed graphs with potential support for AR/VR, lives in separate branch https://github.com/AlexMikhalev/cord19redisknowledgegraph/tree/phase3</p></li>
+</ul>
+</div>
+<div class="section" id="conclusion-and-lessons-learned">
+<h1>Conclusion and lessons learned<a class="headerlink" href="#conclusion-and-lessons-learned" title="Permalink to this headline">¶</a></h1>
+<p>We took OCR scans in JSON format and turned them into Knowledge Graph, demonstrating how you can apply modern techniques like BERT tokenisation and more traditional Semantic Network/OWL/Methathesaurus technique based on Unified Medical Language System. Redis Ecosystem offers a lot to the data science community, and I hope it will take its place at the core of Kaggle notebooks, ML frameworks and make them more deployable. The success of our industry depends on how our tools work together  - regardless of whether they are engineering, data science, machine learning and organisational or architectural.</p>
+<p>PS. Building a distributed system, even as simple one as this one with kids around is “difficult/funny”. Special thank you to my patient wife, Karine.</p>
+</div>
+<div class="section" id="further-steps">
+<h1>Further steps<a class="headerlink" href="#further-steps" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><p>Documentation</p></li>
+<li><p>Make tokeniser useful</p></li>
+<li><p>Make matcher multi-thread/multi process</p></li>
+<li><p>Use Write behind pattern to write into Redis Graph</p></li>
+<li><p>Visualisation expansions</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">gears</span><span class="o">-</span><span class="n">cli</span> <span class="o">--</span><span class="n">host</span> <span class="mf">10.144</span><span class="o">.</span><span class="mf">17.211</span> <span class="o">--</span><span class="n">port</span> <span class="mi">30001</span> <span class="n">lang_detect_gears_paragraphs</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">requirements</span> <span class="n">requirements_gears</span><span class="o">.</span><span class="n">txt</span>
+<span class="n">SECONDS</span><span class="o">=</span><span class="mi">0</span>
+<span class="n">gears</span><span class="o">-</span><span class="n">cli</span> <span class="o">--</span><span class="n">host</span> <span class="mf">10.144</span><span class="o">.</span><span class="mf">17.211</span> <span class="o">--</span><span class="n">port</span> <span class="mi">30001</span> <span class="n">symspell_sentences_streamed</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">requirements</span> <span class="n">requirements_gears_symspell</span><span class="o">.</span><span class="n">txt</span>
+<span class="n">echo</span> <span class="s2">&quot;symspell_sentences_streamed.py registered in $SECONDS seconds.&quot;</span>
+<span class="n">SECONDS</span><span class="o">=</span><span class="mi">0</span>
+<span class="n">gears</span><span class="o">-</span><span class="n">cli</span> <span class="o">--</span><span class="n">host</span> <span class="mf">10.144</span><span class="o">.</span><span class="mf">17.211</span> <span class="o">--</span><span class="n">port</span> <span class="mi">30001</span> <span class="n">spacy_sentences_streams</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">requirements</span> <span class="n">requirements_gears_spacy</span><span class="o">.</span><span class="n">txt</span>
+<span class="n">echo</span> <span class="s2">&quot;spacy_sentences_streams.py registered in $SECONDS seconds.&quot;</span>
+<span class="n">SECONDS</span><span class="o">=</span><span class="mi">0</span>
+<span class="n">gears</span><span class="o">-</span><span class="n">cli</span> <span class="o">--</span><span class="n">host</span> <span class="mf">10.144</span><span class="o">.</span><span class="mf">17.211</span> <span class="o">--</span><span class="n">port</span> <span class="mi">30001</span> <span class="n">tokenizer_bert_stream</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">requirements</span> <span class="n">requirements_tokenizer</span><span class="o">.</span><span class="n">txt</span> 
+<span class="n">echo</span> <span class="s2">&quot;tokenizer_bert_stream.py registered in $SECONDS seconds.&quot;</span>
+<span class="n">sleep</span> <span class="mi">10</span>
+<span class="n">SECONDS</span><span class="o">=</span><span class="mi">0</span>
+<span class="n">python</span> <span class="n">RedisIntakeRedisClusterSample</span><span class="o">.</span><span class="n">py</span> 
+<span class="n">echo</span> <span class="s2">&quot;RedisIntakeRedisClusterSample.py finished in $SECONDS seconds.&quot;</span>
+<span class="n">SECONDS</span><span class="o">=</span><span class="mi">0</span>
+<span class="n">python</span> <span class="n">matcher_node_hash</span><span class="o">.</span><span class="n">py</span> 
+<span class="n">echo</span> <span class="s2">&quot;matcher_node_hash.py finished in $SECONDS seconds.&quot;</span>
+<span class="n">SECONDS</span><span class="o">=</span><span class="mi">0</span>
+<span class="n">python</span> <span class="n">matcher_node</span><span class="o">.</span><span class="n">py</span> 
+<span class="n">echo</span> <span class="s2">&quot;matcher_node.py finished in $SECONDS seconds.&quot;</span>
+</pre></div>
+</div>
+<p>Ways to test search:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">curl</span> <span class="o">-</span><span class="n">i</span> <span class="o">-</span><span class="n">H</span> <span class="s2">&quot;Content-Type: application/json&quot;</span> <span class="o">-</span><span class="n">X</span> <span class="n">POST</span> <span class="o">-</span><span class="n">d</span> <span class="p">{</span><span class="s2">&quot;&quot;&quot;search&quot;&quot;&quot;</span><span class="p">:</span><span class="s2">&quot;&quot;&quot;SARS Hypothesis Generation family&quot;&quot;&quot;</span><span class="p">}</span> <span class="s2">&quot;http://10.144.17.211:8181/search&quot;</span>
+</pre></div>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Yggdrasil: Covid19 - Redis Knowledge Graph</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="Roadmap.html">Project tasks/Roadmap:</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Vision</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#mission">Mission</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#goal">Goal</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#implementation">Implementation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#conclusion-and-lessons-learned">Conclusion and lessons learned</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#further-steps">Further steps</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="Roadmap.html" title="previous chapter">Project tasks/Roadmap:</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, Alex Mikhalev.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.0.4</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/submissionredishack.md.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -1,0 +1,143 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>&lt;no title&gt; &#8212; Yggdrasil: Covid19 - Redis Knowledge Graph 0.1 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <p># cord19redisknowledgegraph
+This is a repo to build Knowledge Graph out of CORD19 kaggle data using Redis</p>
+<p>This is a next phase of [original Kaggle submission](<a class="reference external" href="https://medium.com/&#64;alex.mikhalev/building-knowledge-graph-from-covid-medical-literature-kaggle-cord19-competition-f0178d2a19bd">https://medium.com/&#64;alex.mikhalev/building-knowledge-graph-from-covid-medical-literature-kaggle-cord19-competition-f0178d2a19bd</a>)</p>
+<p>[Redis ‘Beyond Cache’ Hackathon Submission](<a class="reference external" href="https://devpost.com/software/yggdrasil-covid19-redis-knowledge-graph">https://devpost.com/software/yggdrasil-covid19-redis-knowledge-graph</a>)</p>
+<p>[Submission Summary](./submissionredishack.md)</p>
+<p>[Todo](./Roadmap.md)</p>
+<p># Installation
+<code class="docutils literal notranslate"><span class="pre">`</span>
+<span class="pre">mkdir</span> <span class="pre">./input</span>
+<span class="pre">pip</span> <span class="pre">install</span> <span class="pre">kaggle</span>
+<span class="pre">cd</span> <span class="pre">input</span>
+<span class="pre">kaggle</span> <span class="pre">datasets</span> <span class="pre">download</span> <span class="pre">allen-institute-for-ai/CORD-19-research-challenge</span>
+<span class="pre">unzip</span> <span class="pre">CORD-19-research-challenge.zip</span>
+<span class="pre">docker</span> <span class="pre">run</span> <span class="pre">-d</span> <span class="pre">--name</span> <span class="pre">rgcluster</span> <span class="pre">-p</span> <span class="pre">30001:30001</span> <span class="pre">-p</span> <span class="pre">30002:30002</span> <span class="pre">-p</span> <span class="pre">30003:30003</span> <span class="pre">redislabs/rgcluster:latest</span>
+<span class="pre">git</span> <span class="pre">clone</span> <span class="pre">https://github.com/AlexMikhalev/cord19redisknowledgegraph</span>
+<span class="pre">cd</span> <span class="pre">cord19redisknowledgegraph</span>
+<span class="pre">pip</span> <span class="pre">install</span> <span class="pre">gears-cli</span>
+<span class="pre">sh</span> <span class="pre">cluster_pipeline_events.sh</span>
+<span class="pre">`</span></code>
+# Start Redis Gears cluster
+<code class="docutils literal notranslate"><span class="pre">`</span>
+<span class="pre">docker</span> <span class="pre">run</span> <span class="pre">-d</span> <span class="pre">-v</span> <span class="pre">$PWD/conf/docker-config.sh:/cluster/config.sh</span> <span class="pre">--name</span> <span class="pre">rgcluster</span> <span class="pre">-p</span> <span class="pre">30001:30001</span> <span class="pre">-p</span> <span class="pre">30002:30002</span> <span class="pre">-p</span> <span class="pre">30003:30003</span> <span class="pre">redislabs/rgcluster:latest</span>
+<span class="pre">`</span></code>
+# Rebuild Manually using create-cluster
+<a href="#id1"><span class="problematic" id="id2">``</span></a>`
+./create-cluster clean
+./create-cluster start</p>
+<blockquote>
+<div><p>echo “yes” | ./create-cluster create
+redis-trib.py execute –addr 10.144.17.211:30001 RG.REFRESHCLUSTER
+redis-trib.py execute –addr 10.144.17.211:30001 RG.CONFIGSET ExecutionMaxIdleTime 300000
+redis-trib.py execute –addr 10.144.17.211:30001 CONFIG SET proto-max-bulk-len 2048mb
+<a href="#id3"><span class="problematic" id="id4">``</span></a><a href="#id5"><span class="problematic" id="id6">`</span></a></p>
+<p>Look at
+submissionredishack.md</p>
+</div></blockquote>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Yggdrasil: Covid19 - Redis Knowledge Graph</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Roadmap.html">Project tasks/Roadmap:</a></li>
+<li class="toctree-l1"><a class="reference internal" href="submissionredishack.html">Vision</a></li>
+<li class="toctree-l1"><a class="reference internal" href="submissionredishack.html#mission">Mission</a></li>
+<li class="toctree-l1"><a class="reference internal" href="submissionredishack.html#goal">Goal</a></li>
+<li class="toctree-l1"><a class="reference internal" href="submissionredishack.html#implementation">Implementation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="submissionredishack.html#conclusion-and-lessons-learned">Conclusion and lessons learned</a></li>
+<li class="toctree-l1"><a class="reference internal" href="submissionredishack.html#further-steps">Further steps</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, Alex Mikhalev.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.0.4</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/includeme.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

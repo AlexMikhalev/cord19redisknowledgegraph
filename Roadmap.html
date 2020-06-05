@@ -1,0 +1,188 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Project tasks/Roadmap: &#8212; Yggdrasil: Covid19 - Redis Knowledge Graph 0.1 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Vision" href="submissionredishack.html" />
+    <link rel="prev" title="Welcome to Yggdrasil: Covid19 - Redis Knowledge Graph’s documentation!" href="index.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="project-tasks-roadmap">
+<h1>Project tasks/Roadmap:<a class="headerlink" href="#project-tasks-roadmap" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="phase-1">
+<h2>Phase 1<a class="headerlink" href="#phase-1" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>[x]  rewrite intake:</p>
+<ul>
+<li><p>[x]  JSON parse into Redis, creates:  article_id,paragraph_id</p></li>
+<li><p>[x]  Redis paragraph split into sentences (BERT tokenised) into article_id, sentence_id, sentence</p></li>
+<li><p>[x]  processed article keys are store cbloom in redis</p></li>
+</ul>
+</li>
+<li><p>[x]  Detect sentence language</p></li>
+<li><p>[x]  Apply symspell</p></li>
+<li><p>[x]  tokenise sentence, storing model details in DB, input sentence, output tokenised sentence,
+- [ ]  Idea worth trying: add tokens to ids and feed into BART model deployed on RedisAI to create a summary of article.
+- [] change tokeniser in two parts so output is ids and written into tensor to be fed into RedisAI BART model for summary of the article (parked)
+[ ]  change tokeniser so output is strings (return as strings from tokeniser), add stopwords and punctuation removal into the same step</p></li>
+<li><p>[x]  Remove stopwords</p></li>
+<li><p>[ ]  Expand abbreviations, store abbreviations dictionary in Redis (cache)</p></li>
+</ul>
+</div>
+<div class="section" id="phase-2">
+<h2>Phase 2<a class="headerlink" href="#phase-2" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>[x]  Match tokens to OWL ready search token to canonical term, store:</p>
+<ul>
+<li><p>canonical_term, sentence_key</p></li>
+<li><p>synonim, sentence_key</p></li>
+</ul>
+</li>
+<li><p>[x]  Create Aho corasick from above - need for matching input as well</p></li>
+<li><p>[x]  Form pairs and create:</p>
+<ul>
+<li><p>[x]  node, rank</p>
+<ul>
+<li><p>[x]  set of article_keys mapped to node</p></li>
+</ul>
+</li>
+<li><p>[x]  edge, rank</p>
+<ul>
+<li><p>[]  set of article_key mapped to edge</p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>[ ] Idea worth trying: Use write behind pattern to automatically map nodes and edges into Redis Graph</p></li>
+</ul>
+</div>
+<div class="section" id="phase-3">
+<h2>Phase 3<a class="headerlink" href="#phase-3" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>[ ] Create a node Article with attributes {id}, title, sentence_key:sentence</p></li>
+<li><p>[ ]  Visualisation D3</p></li>
+<li><p>[ ]  search terms matched into aho corasic</p></li>
+<li><p>[ ]  nodes + edges</p>
+<ul>
+<li><p>[ ]  on click to node list articles</p></li>
+<li><p>[ ]  on click to edge list articles</p></li>
+<li><p>[ ]  On mouse over show definition of term</p></li>
+</ul>
+</li>
+<li><p>[ ]  add autocomplete into search</p></li>
+</ul>
+<p>Datamodel for Visualisation:
+datamodel:</p>
+<ul class="simple">
+<li><p>node is a medical term from UMLS (medical dictionary). It will have a properties: canonical name, rank, description (and edges). It can will have synonyms  (internally)</p></li>
+<li><p>edge is pair of nodes (terms) met in article. Edge will have a list of articles (article_id) associated with it, sorted by - each edge have a rank, we can change thickness of it</p></li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Yggdrasil: Covid19 - Redis Knowledge Graph</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Project tasks/Roadmap:</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#phase-1">Phase 1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#phase-2">Phase 2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#phase-3">Phase 3</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="submissionredishack.html">Vision</a></li>
+<li class="toctree-l1"><a class="reference internal" href="submissionredishack.html#mission">Mission</a></li>
+<li class="toctree-l1"><a class="reference internal" href="submissionredishack.html#goal">Goal</a></li>
+<li class="toctree-l1"><a class="reference internal" href="submissionredishack.html#implementation">Implementation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="submissionredishack.html#conclusion-and-lessons-learned">Conclusion and lessons learned</a></li>
+<li class="toctree-l1"><a class="reference internal" href="submissionredishack.html#further-steps">Further steps</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="index.html" title="previous chapter">Welcome to Yggdrasil: Covid19 - Redis Knowledge Graph’s documentation!</a></li>
+      <li>Next: <a href="submissionredishack.html" title="next chapter">Vision</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, Alex Mikhalev.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.0.4</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/Roadmap.md.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
