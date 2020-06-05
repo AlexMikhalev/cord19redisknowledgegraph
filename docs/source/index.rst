@@ -18,7 +18,7 @@ Architecture Diagram
 
 .. mermaid::
 
-   graph LR;
+   graph TD;
       A[Intake]-->B(Language Detector);
       B-->C(Spacy:Split paragraphs);
       C-->D(Spellchecker: SymSpell);
