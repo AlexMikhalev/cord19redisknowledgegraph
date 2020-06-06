@@ -11,6 +11,7 @@ This is a next phase of [original Kaggle submission](https://medium.com/@alex.mi
 
 [Documentation](https://alexmikhalev.github.io/cord19redisknowledgegraph/)
 
+
 # Installation 
 ```
 mkdir ./input
@@ -41,6 +42,7 @@ docker run -d -v $PWD/conf/docker-config.sh:/cluster/config.sh --name rgcluster 
  Look at 
  submissionredishack.md 
  
-
+# References
+[Original Inspiration](http://sujitpal.blogspot.com/2020/02/entity-co-occurrence-graphs-as-mind-maps.html)
 
 
