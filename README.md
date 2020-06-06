@@ -9,6 +9,8 @@ This is a next phase of [original Kaggle submission](https://medium.com/@alex.mi
 
 [Todo](./Roadmap.md)
 
+[Documentation](https://alexmikhalev.github.io/cord19redisknowledgegraph/)
+
 # Installation 
 ```
 mkdir ./input
