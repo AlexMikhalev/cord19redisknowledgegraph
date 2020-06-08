@@ -46,7 +46,6 @@ export class AppService {
   // }
 
   searchApi(text: string): Observable<ISearchResult>{
-    console.log(text);
     return this.http.post<any>(this.searchUri, { search: text }).pipe(map((data) => {
       console.log(data)
       return data.search_result;
