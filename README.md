@@ -5,9 +5,9 @@ This is a next phase of [original Kaggle submission](https://medium.com/@alex.mi
 
 [Redis 'Beyond Cache' Hackathon Submission](https://devpost.com/software/yggdrasil-covid19-redis-knowledge-graph)
 
-[Submission Summary](./submissionredishack.md)
+[Submission Summary](./docs/source/submissionredishack.md)
 
-[Todo](./Roadmap.md)
+[Todo](./docs/source/Roadmap.md)
 
 [Documentation](https://alexmikhalev.github.io/cord19redisknowledgegraph/)
 
