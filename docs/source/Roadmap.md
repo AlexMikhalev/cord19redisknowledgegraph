@@ -11,8 +11,8 @@
 - [x]  Apply symspell
 - [x]  tokenise sentence, storing model details in DB, input sentence, output tokenised sentence,
         - [ ]  Idea worth trying: add tokens to ids and feed into BART model deployed on RedisAI to create a summary of article.
-        - [] change tokeniser in two parts so output is ids and written into tensor to be fed into RedisAI BART model for summary of the article (parked)
-  [ ]  change tokeniser so output is strings (return as strings from tokeniser), add stopwords and punctuation removal into the same step 
+        - [] add to tokeniser so output is ids and written into tensor to be fed into RedisAI BART model for summary of the article (parked)
+  [x]  change tokeniser so output is strings (return as strings from tokeniser), add stopwords and punctuation removal into the same step 
 - [x]  Remove stopwords
 - [ ]  Expand abbreviations, store abbreviations dictionary in Redis (cache)
 
@@ -30,12 +30,12 @@
 - [ ] Idea worth trying: Use write behind pattern to automatically map nodes and edges into Redis Graph
 
 ## Phase 3
-- [ ] Create a node Article with attributes {id}, title, sentence_key:sentence
-- [ ]  Visualisation D3
-- [ ]  search terms matched into aho corasic
-- [ ]  nodes + edges
-    - [ ]  on click to node list articles
-    - [ ]  on click to edge list articles
+- [x] Create a node Article with attributes {id}, title, sentence_key:sentence
+- [x]  Visualisation D3
+- [x]  search terms matched into aho corasic
+- [x]  nodes + edges
+    - [ ]  on click to node show concept definition
+    - [x]  on click to edge list articles
     - [ ]  On mouse over show definition of term
 - [ ]  add autocomplete into search
 
