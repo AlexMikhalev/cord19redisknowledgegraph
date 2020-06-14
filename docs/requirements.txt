@@ -3,3 +3,4 @@ sphinxcontrib-mermaid
 sphinx-autobuild
 sphinx_markdown_tables
 recommonmark
+sphinx_rtd_theme

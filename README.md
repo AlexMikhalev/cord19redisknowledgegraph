@@ -5,9 +5,12 @@ This is a next phase of [original Kaggle submission](https://medium.com/@alex.mi
 
 [Redis 'Beyond Cache' Hackathon Submission](https://devpost.com/software/yggdrasil-covid19-redis-knowledge-graph)
 
-[Submission Summary](./submissionredishack.md)
+[Submission Summary](./docs/source/submissionredishack.md)
 
-[Todo](./Roadmap.md)
+[Todo](./docs/source/Roadmap.md)
+
+[Documentation](https://alexmikhalev.github.io/cord19redisknowledgegraph/)
+
 
 # Installation 
 ```
@@ -39,6 +42,7 @@ docker run -d -v $PWD/conf/docker-config.sh:/cluster/config.sh --name rgcluster 
  Look at 
  submissionredishack.md 
  
-
+# References
+[Original Inspiration](http://sujitpal.blogspot.com/2020/02/entity-co-occurrence-graphs-as-mind-maps.html)
 
 

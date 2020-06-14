@@ -6,7 +6,8 @@
 SPHINXOPTS    ?=
 SPHINXBUILD   ?= sphinx-build
 SOURCEDIR     = source
-BUILDDIR      = build
+PDFBUILDDIR   = /tmp/
+BUILDDIR      = ../../cord19redisknowledgegraph_doc/
 
 # Put it first so that "make" without argument is like "make help".
 help:

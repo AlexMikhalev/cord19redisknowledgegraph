@@ -7,8 +7,9 @@ Welcome to Yggdrasil: Covid19 - Redis Knowledge Graph's documentation!
    :maxdepth: 2
    :caption: Contents:
 
-   Roadmap
+   
    submissionredishack
+   Roadmap
 
 First attempt to create documentation, so far best content inside submissionhack
 
@@ -17,7 +18,7 @@ Architecture Diagram
 
 .. mermaid::
 
-   graph LR;
+   graph TD;
       A[Intake]-->B(Language Detector);
       B-->C(Spacy:Split paragraphs);
       C-->D(Spellchecker: SymSpell);
