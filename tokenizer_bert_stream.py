@@ -6,9 +6,8 @@ hence was the reason to split tokeniser into separate one.
 Additional steps can be added by adding a stream instead of set.
 TODO: increase batch size: Transformers optimised for batch processing
  increase batch size 
-TODO: split this step in two: one to return strings from tokeniser and another ids
+TODO: add write down token ids 
 TODO: take ids from tokens and feed into RedisAI for BART based article summarisation
-TODO: amend next step to take strings as input instead of list
 """
 tokenizer = None 
 
@@ -28,9 +27,9 @@ def tokenise_sentence(record):
     shard_id=hashtag()
     key = "tokenized:bert:%s:{%s}" % (sentence_key,shard_id)
     tokens = tokenizer.tokenize(sentence_orig)
-    for token in tokens:
-        execute('lpush', key, token)
-        execute('SADD','processed_docs_stage3_tokenized{%s}' % shard_id, key)
+    out_string=tokenizer.convert_tokens_to_string(tokens)
+    execute('SET', key, out_string)
+    execute('SADD','processed_docs_stage3_tokenized{%s}' % shard_id, key)
         # execute('XADD', 'tokeniser_to_matcher{%s}' % hashtag(), '*', 'sentence_key', f"{key}")
     log(f"Tokenised sentence {sentence_key} and my {shard_id}")
 

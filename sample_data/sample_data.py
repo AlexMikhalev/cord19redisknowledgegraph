@@ -18,3 +18,4 @@ measure other important elements of droplet precautions for those patients assig
 education. Passive reminders to ED staff may help to improve compliance, however, more research studies should be undertaken to determine what interventions have the most significant impact, including active protocols, changes to hospital policies and procedures, or simple educational interventions. The electronic medical record may be a useful tool for improving compliance with transmission-based precautions, by implementing direct reminders on order sets and informational mailings to staff, and by tracking ED compliance.
 """
 sentence="The fit for the whole of Italy produces the following parameter \xce\xb1 and related quantities:"
+sentence2="There are various causes for neural injury, including direct cord or nerve injury from instrumentation and pedicle screws, stretch injury from deformity correction, and spinal cord ischemia from poor perfusion."

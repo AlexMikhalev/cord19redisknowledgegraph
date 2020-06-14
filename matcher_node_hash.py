@@ -1,4 +1,5 @@
 #FIXME create a string based tokens 
+#TODO: amend next step to take strings as input instead of list
 import ujson as json
 
 import redis
@@ -64,7 +65,8 @@ if __name__ == "__main__":
     for each_item in all_lists_processed:
         sentences_list=rediscluster_client.smembers(each_item)
         for item in sentences_list:
-            tokens=set(rediscluster_client.lrange(item,0,-1))
+            # TODO: make sure it works
+            tokens=set(rediscluster_client.get(item).split(' '))
             tokens.difference_update(STOP_WORDS)
             tokens.difference_update(set(punctuation)) 
             matched_ents = find_matches(" ".join(tokens), Automata)
