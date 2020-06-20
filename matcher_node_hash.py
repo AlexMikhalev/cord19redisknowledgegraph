@@ -54,13 +54,13 @@ def find_matches(sent_text, A):
 if __name__ == "__main__":
     """
     This is matcher node hash: it builds a hash structure in Redis with aim to prepare for 
-    RedisSearch population 
+    RedisGraph population 
     """
     Automata=loadAutomata()
 
     num_sents = 0 
-    # all_lists_processed=rediscluster_client.keys('processed_docs_stage3_tokenized*')
-    all_lists_processed=rediscluster_client.keys('processed_docs_stage3_tokenized{1x3}')
+    all_lists_processed=rediscluster_client.keys('processed_docs_stage3_tokenized*')
+    # all_lists_processed=rediscluster_client.keys('processed_docs_stage3_tokenized{1x3}')
 
     for each_item in all_lists_processed:
         sentences_list=rediscluster_client.smembers(each_item)
@@ -85,8 +85,9 @@ if __name__ == "__main__":
 
                     if not label_destination:
                         label_destination=pair[1][1]
-                    source_canonical_name=re.sub('[^A-Za-z0-9]+', '_', str(label_source))
-                    destination_canonical_name=re.sub('[^A-Za-z0-9]+', '_', str(label_destination))
+                    #FIXME: seems spaces are ok in names for Graph Labels
+                    source_canonical_name=re.sub('[^A-Za-z0-9]+', ' ', str(label_source))
+                    destination_canonical_name=re.sub('[^A-Za-z0-9]+', ' ', str(label_destination))
 
                     redis_client.hsetnx(f'nodes:{source_entity_id}','id',source_entity_id)
                     redis_client.hsetnx(f'nodes:{source_entity_id}','name',source_canonical_name)
@@ -94,15 +95,13 @@ if __name__ == "__main__":
                     redis_client.hsetnx(f'nodes:{destination_entity_id}','name',destination_canonical_name)
                     redis_client.hincrby(f'nodes:{source_entity_id}' ,'rank',1)
                     redis_client.hincrby(f'nodes:{destination_entity_id}','rank',1)
-                    #FIXME: that should be a list appended to source/destination hash: 
-                    # split into article + attributes + connection and rank
-                    # redis_client.hsetnx(f'edges:{source_entity_id}:{destination_entity_id}','skey',sentence_key)
                     redis_client.zincrby(f'edges_scored:{source_entity_id}:{destination_entity_id}',1, sentence_key)
                     redis_client.hincrby(f'edges:{source_entity_id}:{destination_entity_id}','rank',1)
-
+            #Delete processed sentence to avoid re-processing (Use Streams instead)
+            rediscluster_client.srem(each_item,item)
             if num_sents % 100 == 0:
                 log(f"... {num_sents} sentences ")
             num_sents+=1
-            log("Flushing graph for sentence %s " % sentence_key)
+            # log("Finished graph for sentence %s " % sentence_key)
 
     logger.info("Completed")

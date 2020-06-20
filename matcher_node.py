@@ -1,5 +1,4 @@
-#FIXME create a string based tokens on previous step 
-# TODO: this script needs to be split into populating redis structures (done) 
+#FIXME: This script is currently intentionally broken - need to be replaced
 # TODO: map redis hdicts into Redis Graph using write behind pattern from gears 
 import sys
 from datetime import datetime
