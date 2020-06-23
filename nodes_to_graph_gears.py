@@ -7,5 +7,5 @@ def create_node(x):
 bg = GearsBuilder()
 bg.foreach(create_node)
 bg.count()
-bg.run('test:nodes:*')
+bg.run('nodes:*')
 

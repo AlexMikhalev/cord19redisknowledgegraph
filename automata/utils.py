@@ -30,3 +30,5 @@ def find_matches(sent_text, A):
             # print("adding match to longest")
             longest_matched_ents.append(matched_ent)
     return [t for t in longest_matched_ents if len(t[1])>3] 
+
+Automata=loadAutomata()

@@ -6,11 +6,11 @@ def create_node(x):
     MERGE (e)-[r:related {rank:%s}]->(t)
     RETURN e.id, type(r), t.id
     """ %(source_id, destination_id,x['value']['rank'])
-    log(f"Node string {edge_string}")
+    # log(f"Node string {edge_string}")
     execute('GRAPH.QUERY', 'CORD19GRAPH', edge_string)
 
 bg = GearsBuilder()
 bg.foreach(create_node)
 bg.count()
-bg.run('test:edges:*')
+bg.run('edges:*')
 
