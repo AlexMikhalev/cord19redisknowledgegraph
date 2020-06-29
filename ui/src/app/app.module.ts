@@ -7,11 +7,17 @@ import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { AppService } from './app.service';
+import { SettingsComponent } from './components/settings/settings.component';
+import { SidebarComponent } from './components/sidebar/sidebar.component';
+import { GraphComponent } from './components/graph/graph.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    NgbdModalContent
+    NgbdModalContent,
+    SettingsComponent,
+    SidebarComponent,
+    GraphComponent
   ],
   imports: [
     BrowserModule,

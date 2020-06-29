@@ -1,16 +1,17 @@
 import { Component, ViewChild, ElementRef, AfterViewInit, Input, OnInit, HostListener } from '@angular/core';
 
-declare var ForceGraph3D;
-declare var ForceGraphVR;
-declare var ForceGraphAR;
-
-import { Vector2 } from 'three';
+import { Vector2, Mesh, Sphere, SphereGeometry, MeshBasicMaterial } from 'three';
 import { UnrealBloomPass } from '../../node_modules/three/examples/jsm/postprocessing/UnrealBloomPass.js';
 import { NgbModal, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { AppService } from './app.service.js';
 import { Observable } from 'rxjs';
 import { of } from 'rxjs/';
+import SpriteText from 'three-spritetext';
+
+declare var ForceGraph3D;
+declare var ForceGraphVR;
+declare var ForceGraphAR;
 
 @Component({
   selector: 'ngbd-modal-content',
@@ -99,6 +100,22 @@ export class AppComponent implements AfterViewInit, OnInit {
     this.Graph(this.graph.nativeElement)
       .linkDirectionalParticleColor(() => 'red')
       .linkDirectionalParticleWidth(4)
+      .nodeAutoColorBy('rank')
+      .nodeThreeObject(node => {
+        // use a sphere as a drag handle
+        const obj = new Mesh(
+          new SphereGeometry(10),
+          new MeshBasicMaterial({ depthWrite: false, transparent: true, opacity: 0 })
+        );
+
+        // add text sprite as child
+        const sprite = new SpriteText(node.name);
+        sprite.color = node.color;
+        sprite.textHeight = 8;
+        obj.add(sprite);
+
+        return obj;
+      })
       .linkHoverPrecision(10)
       .graphData(this.gData);
 
@@ -148,6 +165,7 @@ export class AppComponent implements AfterViewInit, OnInit {
   search(){
     if(this.searchForm.valid){
       this.service.searchApi(this.searchForm.get('term').value).subscribe(x => {
+        // x = this.cleanGraph(x);
         this.gData = x;
         this.initializeGraph();
       }, (err) => {
