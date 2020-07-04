@@ -4,7 +4,7 @@
             <a class="navbar-brand" routerLink="/">
                 <img src="" alt="" />
             </a>
-            <form class="form-inline search-form ml-2" [formGroup]="searchForm">
+            <form class="form-inline search-form ml-2 col-md-8" [formGroup]="searchForm">
                 <div class="input-group">
                     <input type="text" class="form-control" placeholder="search for medical knowledge" aria-label="search"
                         aria-describedby="search-icon" formControlName='term'>
@@ -25,4 +25,6 @@
         </div>
     </div>
 </nav>
-<section id="3d-graph" #graph></section>
+<app-graph (graphClicked)="onGraphClick($event)"></app-graph>
+<app-sidebar></app-sidebar>
+<simple-notifications></simple-notifications>

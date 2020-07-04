@@ -10,6 +10,16 @@ import { AppService } from './app.service';
 import { SettingsComponent } from './components/settings/settings.component';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { GraphComponent } from './components/graph/graph.component';
+import { DataService } from './services/data.service';
+import { StoreModule } from '@ngrx/store';
+import { EffectsModule } from '@ngrx/effects';
+import { AppEffects } from './redux/effects';
+import * as AppReducers from './redux/reducers';
+// import { offlineMetaReducer } from './redux/offline.metareducer';
+import { SimpleNotificationsModule } from 'angular2-notifications';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { environment } from 'src/environments/environment';
 
 @NgModule({
   declarations: [
@@ -24,12 +34,25 @@ import { GraphComponent } from './components/graph/graph.component';
     AppRoutingModule,
     NgbModule,
     ReactiveFormsModule,
-    HttpClientModule
+    HttpClientModule,
+    StoreModule.forRoot(
+      AppReducers.reducers,
+      // { 
+      //   metaReducers: [offlineMetaReducer] 
+      // }
+    ),
+    StoreDevtoolsModule.instrument({
+      maxAge: 25, // Retains last 25 states
+      logOnly: environment.production, // Restrict extension to log-only mode
+    }),
+    EffectsModule.forRoot([AppEffects]),
+    SimpleNotificationsModule.forRoot(),
+    BrowserAnimationsModule
   ],
   providers: [
-    AppService
+    // AppService,
+    // DataService
   ],
-  bootstrap: [AppComponent],
-  entryComponents: [NgbdModalContent]
+  bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -1,0 +1,26 @@
+@import "../../../scss/variables";
+
+.sidebar {
+    margin-top: $navbarHeight;
+    height: 100%;
+    width: 320px;
+    display: none;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    right: 0;
+    color: #90a4ae;
+    background-color: #263238;
+    overflow-x: hidden;
+    padding: 16px;
+    transition: 0.5s;
+
+    a{
+        cursor: pointer;
+    }
+}
+
+.sidebar.open{
+    display: inline-block;
+    // width: 320px;
+}
