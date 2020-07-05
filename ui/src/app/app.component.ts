@@ -85,7 +85,6 @@ export class AppComponent implements OnInit {
         break;
 
       case 'edge':
-        console.log('edge clicked');
         this.store.dispatch(new Read({
           state: 'edgeResults',
           route: `edge/edges:${event.data.source.id}:${event.data.target.id}`
@@ -93,6 +92,11 @@ export class AppComponent implements OnInit {
         this.store.dispatch(new Set({
           data: true,
           state: 'sidebar'
+        }));
+
+        this.store.dispatch(new Set({
+          data: event.data,
+          state: 'selected'
         }));
         break;
 

@@ -1,4 +1,13 @@
-<section class="sidebar" id="sidebarContainer" ng-class="open? 'open' : ''">
+<section class="sidebar" id="sidebarContainer" [ngClass]="{ 'opened': open }">
     <a class="closebtn" (click)="closeSidebar()">&times;</a>
-    sidebar opened
+    <div class="">
+        <b>Source:</b> {{ selected?.source?.name }} <br/>
+        <b>Target:</b> {{ selected?.target?.name }}
+    </div>
+    <ul class="content">
+        <li *ngFor="let result of results$ | async">
+            <b>Title:</b> {{ result.title }} <br/>
+            <b>Sentence:</b> {{ result.sentence }}
+        </li>
+    </ul>
 </section>

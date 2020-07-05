@@ -8,7 +8,8 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "electron": "ng build --base-href ./ && electron ."
+    "electron": "ng build --base-href ./ && electron .",
+    "build:prod": "ng build --base-href ./ --deploy-url /"
   },
   "private": true,
   "dependencies": {

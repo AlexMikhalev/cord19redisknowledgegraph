@@ -12,15 +12,31 @@
     color: #90a4ae;
     background-color: #263238;
     overflow-x: hidden;
+    overflow-y: auto;
     padding: 16px;
     transition: 0.5s;
 
     a{
         cursor: pointer;
+        position: absolute;
+        top: 0;
+        right: 25px;
+        font-size: 36px;
+        margin-left: 50px;
     }
 }
 
-.sidebar.open{
+.sidebar.opened{
     display: inline-block;
     // width: 320px;
+}
+
+.content{
+    list-style: none;
+    padding: 0px;
+    margin: 0px;
+
+    li{
+        padding-bottom: 16px;
+    }
 }

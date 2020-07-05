@@ -6,7 +6,7 @@ import { MeshBasicMaterial, SphereGeometry, Mesh, Vector2 } from 'three';
 import { Store } from '@ngrx/store';
 import { State, ISearchResult} from '../../redux/state';
 import * as AppSelectors from '../../redux/selectors';
-import { filter } from 'rxjs/operators';
+import { filter, distinctUntilChanged, map } from 'rxjs/operators';
 
 declare var ForceGraph3D;
 declare var ForceGraphVR;
@@ -42,6 +42,22 @@ export class GraphComponent implements OnInit {
         this.emptySearch = false;
         this.gData = results;
         this.initializeGraph();
+      }
+    );
+
+    this.store.select(AppSelectors.selectUX)
+      .pipe(map(x => x.sidebar))
+      .pipe(distinctUntilChanged())
+      .pipe(filter(x => x!=null))
+      .subscribe(open => {
+        console.log(open)
+        if(open){
+          this.canvasWidth = window.innerWidth - 320;
+        }else{
+          this.canvasWidth = window.innerWidth;
+        }
+        
+        this.Graph.width(this.canvasWidth)
       }
     );
   }
@@ -100,8 +116,6 @@ export class GraphComponent implements OnInit {
   }
 
   onLinkClick(node, event){
-    this.canvasWidth = window.innerWidth - 320;
-    this.Graph.width(this.canvasWidth)
     this.graphClicked.emit({ type: 'edge', data: node });
   }
 

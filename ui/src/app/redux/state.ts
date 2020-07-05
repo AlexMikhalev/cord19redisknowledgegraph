@@ -28,6 +28,7 @@ export interface AppState {
     toolBarStyle: string;
     mobile: boolean;
     sidebar: boolean;
+    selected: any;
 }
 
 export const initialState: AppState = {
@@ -38,7 +39,8 @@ export const initialState: AppState = {
     nodeResults: null,
     toolBarStyle: 'dark',
     mobile: false,
-    sidebar: null
+    sidebar: null,
+    selected: null
 };
 
 export interface State {
