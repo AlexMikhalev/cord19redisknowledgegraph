@@ -1,5 +1,5 @@
 #!flask/bin/python
-from flask import Flask, jsonify, request,json
+from flask import Flask, jsonify, request,json, abort
 from flask_cors import CORS
 app = Flask(__name__)
 CORS(app)
@@ -50,9 +50,13 @@ def get_edgeinfo(edge_string):
         result_table.append({'title':title,'sentence':sentence,'sentencekey':sentence_key})
     else:
         result_table.append(redis_client.hgetall(f'{edge_string}'))
+    log("Result table "+str(result_table))
+    if result_table==[{}]:
+        abort(404)
+    else:
+        #FIXME: this tuple conversion doesn't make sense
+        return jsonify(tuple(result_table)), 200
     
-    return jsonify({'results': result_table}), 200
-
 @app.route('/search', methods=['POST'])
 def search_task():
     if not request.json or not 'search' in request.json:
@@ -88,11 +92,7 @@ def search_task():
                 nodes.append({'id':destination_entity_id,'name':destination_entity_id})
             nodes_set.add(destination_entity_id)
 
-    search_result={
-        'nodes': nodes,
-        'links': links
-    }
-    return jsonify({'search_result': search_result}), 200
+    return jsonify({'nodes': nodes,'links': links}), 200
 
 @app.route('/gsearch', methods=['POST'])
 def gsearch_task():
@@ -104,14 +104,9 @@ def gsearch_task():
     search_string=request.json['search']
 
     nodes=match_nodes(search_string)
-    node_list=get_nodes(nodes)
-    links=get_edges(nodes)
-
-    search_result={
-        'nodes': node_list,
-        'links': links
-    }
-    return jsonify({'search_result': search_result}), 200
+    links,node_list=get_edges(nodes)
+    node_list=get_nodes(node_list)
+    return jsonify({'nodes': node_list,'links': links}), 200
 
 
 if __name__ == "__main__":
