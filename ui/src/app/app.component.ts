@@ -60,7 +60,7 @@ export class AppComponent implements OnInit {
     fb: FormBuilder,
     private store: Store<AppState>){
     this.searchForm = fb.group({
-      'term': ['Effectiveness of community contact reduction', Validators.required]
+      'term': ['', Validators.required]
     });
   }
 
