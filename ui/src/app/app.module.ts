@@ -20,14 +20,16 @@ import { SimpleNotificationsModule } from 'angular2-notifications';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { environment } from 'src/environments/environment';
-
+import { SliderComponent } from './components/slider/slider.component';
+import { NgxSliderModule } from '@angular-slider/ngx-slider'
 @NgModule({
   declarations: [
     AppComponent,
     NgbdModalContent,
     SettingsComponent,
     SidebarComponent,
-    GraphComponent
+    GraphComponent,
+    SliderComponent
   ],
   imports: [
     BrowserModule,
@@ -47,7 +49,8 @@ import { environment } from 'src/environments/environment';
     }),
     EffectsModule.forRoot([AppEffects]),
     SimpleNotificationsModule.forRoot(),
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    NgxSliderModule
   ],
   providers: [
     // AppService,

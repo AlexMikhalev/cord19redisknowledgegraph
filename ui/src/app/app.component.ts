@@ -56,12 +56,23 @@ export class AppComponent implements OnInit {
   searchForm: FormGroup;
   sidebarOpen = false;
 
+  // searches
+  // "Effectiveness of case isolation/isolation of exposed individuals (i.e. quarantine)",
+  // "Effectiveness of community contact reduction",
+  // "Effectiveness of inter/inner travel restriction",
+  // "Effectiveness of school distancing",
+  // "Effectiveness of workplace distancing",
+  // "Effectiveness of a multifactorial strategy prevent secondary transmission",
+  // "Seasonality of transmission",
+  // "How does temperature and humidity affect the transmission of 2019-nCoV?",
+  // "Significant changes in transmissibility in changing seasons?",
+  // "Effectiveness of personal protective equipment (PPE)"
   constructor(
     fb: FormBuilder,
     private store: Store<AppState>){
     this.searchForm = fb.group({
-      'term': ['', Validators.required]
-      // 'term': ['Effectiveness of community contact reduction', Validators.required]
+      // 'term': ['', Validators.required]
+      'term': ['How does temperature and humidity affect the transmission of 2019-nCoV', Validators.required]
     });
   }
 

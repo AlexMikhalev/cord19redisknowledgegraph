@@ -16,6 +16,7 @@
     "3d-force-graph": "^1.63.0",
     "3d-force-graph-ar": "^1.4.1",
     "3d-force-graph-vr": "^1.33.0",
+    "@angular-slider/ngx-slider": "^2.0.3",
     "@angular/animations": "~8.2.14",
     "@angular/common": "~8.2.14",
     "@angular/compiler": "~8.2.14",

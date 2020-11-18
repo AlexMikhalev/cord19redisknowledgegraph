@@ -34,7 +34,7 @@ export class GraphComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.canvasHeight = window.innerHeight - 64;
+    this.canvasHeight = window.innerHeight - 128;
     this.canvasWidth = window.innerWidth;
     this.store.select<any>(AppSelectors.selectSearchResults)
       .pipe(filter(x => x!=null))
@@ -107,7 +107,7 @@ export class GraphComponent implements OnInit {
 
   @HostListener('window:resize', ['$event'])
   onResize(event) {
-    this.canvasHeight = window.innerHeight - 50;
+    this.canvasHeight = window.innerHeight - 128;
     this.canvasWidth = window.innerWidth;
   }
 
