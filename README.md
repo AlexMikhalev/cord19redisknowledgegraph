@@ -11,6 +11,8 @@ This is a next phase of [original Kaggle submission](https://medium.com/@alex.mi
 
 [Documentation](https://alexmikhalev.github.io/cord19redisknowledgegraph/)
 
+Communication: [Twist](https://twist.com/j/8f3e71cd596880bc0ecece4d82e2d8b5) and [Discord](https://discord.gg/EuxQhb)
+
 
 # Installation 
 ```
