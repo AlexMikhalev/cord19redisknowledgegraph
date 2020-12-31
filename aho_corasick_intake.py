@@ -15,4 +15,4 @@ with open(datafile,"r") as source:
 A.make_automaton()
 print(A.get_stats())
 
-joblib.dump(A,"./automata/automata_syns.pkl.bz2")
+joblib.dump(A,"./automata/automata_syns_py.pkl.bz2")
