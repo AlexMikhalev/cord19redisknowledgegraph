@@ -40,7 +40,7 @@ export class GraphComponent implements OnInit {
       .pipe(filter(x => x!=null))
       .subscribe((results) => {
         this.emptySearch = false;
-        this.gData = results;
+        // this.gData = results;
         this.initializeGraph();
       }
     );

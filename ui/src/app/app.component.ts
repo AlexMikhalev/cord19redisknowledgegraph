@@ -72,7 +72,7 @@ export class AppComponent implements OnInit {
     private store: Store<AppState>){
     this.searchForm = fb.group({
       // 'term': ['', Validators.required]
-      'term': ['How does temperature and humidity affect the transmission of 2019-nCoV', Validators.required]
+      'term': ['following variants', Validators.required]
     });
   }
 
@@ -81,11 +81,17 @@ export class AppComponent implements OnInit {
   search(){
     if(this.searchForm.valid){
 
-      // dispatch redux action
+      // create search request
       this.store.dispatch(new Create({
         data: { search: this.searchForm.get('term').value },
         state: 'searchResults',
         route: 'gsearch'
+      }));
+
+      // set search term
+      this.store.dispatch(new Set({
+        data: this.searchForm.get('term').value,
+        state: 'searchTerm'
       }));
     }
   }

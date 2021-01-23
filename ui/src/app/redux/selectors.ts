@@ -5,7 +5,7 @@ import { AppState, State } from './state';
 // export const selectAppState = createFeatureSelector<AppState>('app');
 export const selectAppState = (state: State) => state.app;
 
-export const selectSearchResults= createSelector(
+export const selectSearchResults = createSelector(
     selectAppState,
     (state: AppState) => {
         return state.searchResults;
@@ -44,10 +44,16 @@ export const selectedEvent = createSelector(
 export const selectUX = createSelector(
     selectAppState,
     (state: AppState) => {
-        return { 
+        return {
             toolBarStyle: state.toolBarStyle,
             mobile: state.mobile,
             sidebar: state.sidebar
         };
+    });
+
+export const selectSearchTerm = createSelector(
+    selectAppState,
+    (state: AppState) => {
+        return state.searchTerm
     });
 
