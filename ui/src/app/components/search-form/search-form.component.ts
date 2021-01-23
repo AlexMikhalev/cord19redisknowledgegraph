@@ -1,6 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngrx/store';
+import { filter } from 'rxjs/operators';
 import { Create, Set } from 'src/app/redux/actions';
 import { State } from 'src/app/redux/state';
 
@@ -11,7 +13,9 @@ import { State } from 'src/app/redux/state';
 })
 export class SearchFormComponent implements OnInit {
 
+  @Input() mode: string;
   searchForm: FormGroup;
+  get term() { return this.searchForm.get('term'); }
 
   // searches
   // "Effectiveness of case isolation/isolation of exposed individuals (i.e. quarantine)",
@@ -25,12 +29,16 @@ export class SearchFormComponent implements OnInit {
   // "Significant changes in transmissibility in changing seasons?",
   // "Effectiveness of personal protective equipment (PPE)"
   
-  constructor(private store: Store<State>, fb: FormBuilder) { 
-
+  constructor(private store: Store<State>, fb: FormBuilder, route: ActivatedRoute) { 
     this.searchForm = fb.group({
-      'term': ['', Validators.required]
-      // 'term': ['following variants', Validators.required]
+      // 'term': ['', Validators.required]
+      'term': ['following variants', Validators.required]
     });
+
+    route.queryParams.pipe(filter(x => x['q'] !== null)).subscribe(x => {
+      this.term.setValue(x['q']);
+      this.search();
+    })
   }
 
   ngOnInit() {
@@ -41,10 +49,11 @@ export class SearchFormComponent implements OnInit {
 
       // create search request
       this.store.dispatch(new Create({
-        data: { search: this.searchForm.get('term').value },
+        data: { search: this.term.value },
         state: 'searchResults',
         postProcess: 'map:years', 
-        route: 'gsearch'
+        route: 'gsearch',
+        navigateTo: { route: 'search', query: { q: this.term.value }}
       }));
 
       // set search term
