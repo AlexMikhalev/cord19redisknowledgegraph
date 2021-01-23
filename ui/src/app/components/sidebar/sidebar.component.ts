@@ -1,5 +1,4 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
 import {State} from '../../redux/state';
 import * as AppSelectors from '../../redux/selectors';
@@ -25,7 +24,6 @@ export class SidebarComponent implements OnInit {
       .pipe(filter(x => x!=null))
       .subscribe(open => {
         this.open = open;
-        console.log(this.open)
       }
     );
 

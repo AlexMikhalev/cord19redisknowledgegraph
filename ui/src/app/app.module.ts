@@ -7,7 +7,7 @@ import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { AppService } from './app.service';
-import { SettingsComponent } from './components/settings/settings.component';
+import { landingPageComponent } from './components/landing-page/landing-page.component';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { GraphComponent } from './components/graph/graph.component';
 import { DataService } from './services/data.service';
@@ -22,14 +22,19 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { environment } from 'src/environments/environment';
 import { SliderComponent } from './components/slider/slider.component';
 import { NgxSliderModule } from '@angular-slider/ngx-slider'
+
+import { CarouselModule } from 'ngx-owl-carousel-o';
+import { SearchFormComponent } from './components/search-form/search-form.component';
+
 @NgModule({
   declarations: [
     AppComponent,
     NgbdModalContent,
-    SettingsComponent,
+    landingPageComponent,
     SidebarComponent,
     GraphComponent,
-    SliderComponent
+    SliderComponent,
+    SearchFormComponent
   ],
   imports: [
     BrowserModule,
@@ -50,7 +55,8 @@ import { NgxSliderModule } from '@angular-slider/ngx-slider'
     EffectsModule.forRoot([AppEffects]),
     SimpleNotificationsModule.forRoot(),
     BrowserAnimationsModule,
-    NgxSliderModule
+    NgxSliderModule,
+    CarouselModule
   ],
   providers: [
     // AppService,

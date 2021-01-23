@@ -1,0 +1,166 @@
+<div class="wrap">
+    <!-- The Pattern Intro -->
+    <section id="intro">
+        <div class="intro-container" data-aos="fade-up">
+            <h1>Covid19 - Redis Knowledge Graph <span>in 3D</span></h1>
+            <h2>Explore medical literature graphically, leveraging industry knowledge and avoiding confirmation bias
+            </h2>
+            <app-search-form></app-search-form>
+        </div>
+    </section><!-- The Pattern Intro -->
+    <main id="main">
+        <!-- ======= About Section ======= -->
+        <section id="about" class="about">
+            <div class="container">
+
+                <div class="row">
+                    <div style="background-image: url(assets/about.jpg)" data-aos="fade-right"
+                        class="image col-xl-5 d-flex align-items-stretch justify-content-center justify-content-lg-start">
+                    </div>
+                    <div class="col-xl-7 pt-4 pt-lg-0 d-flex align-items-stretch">
+                        <div class="content d-flex flex-column justify-content-center" data-aos="fade-left">
+                            <h3>Information exploration should be spacial preferably in VR</h3>
+                            <p>
+                                When exploring topics on science or engineering, you look at the diversity of the
+                                opinion, not the variety of the same cluster of words, same thought. You'd want to avoid
+                                confirmation bias and find articles relevant to the same concept, not necessary
+                                the ones which have similar words.
+                            </p>
+                            <div class="row">
+                                <div class="col-md-6 icon-box" data-aos="zoom-in" data-aos-delay="100">
+                                    <i class="bx bx-receipt"></i>
+                                    <h4>NLP</h4>
+                                    <p>Incorporating System 1 (fast, intuitive reasoning) and System 2 (high-level
+                                        reasoning) AI</p>
+                                </div>
+                                <div class="col-md-6 icon-box" data-aos="zoom-in" data-aos-delay="200">
+                                    <i class="bx bx-cube-alt"></i>
+                                    <h4>VR/AR visualisation</h4>
+                                    <p>Explore information in a spatial experience (memory palace, see Theatre of Giulio
+                                        Camillo). </p>
+                                </div>
+                                <div class="col-md-6 icon-box" data-aos="zoom-in" data-aos-delay="300">
+                                    <i class="bx bx-network-chart"></i>
+                                    <h4>Force-directed graphs</h4>
+                                    <p>Relevant text pops up on the connection and where people explore the concepts
+                                    </p>
+                                </div>
+                                <div class="col-md-6 icon-box" data-aos="zoom-in" data-aos-delay="400">
+                                    <i class="bx bx-code-curly"></i>
+                                    <h4>Redis ecosystem</h4>
+                                    <p>Levering or trying to every RedisLab module, starting with Redis Gears,
+                                        RedisGraph</p>
+                                </div>
+                            </div>
+                        </div><!-- End .content-->
+                    </div>
+                </div>
+
+            </div>
+        </section><!-- End About Section -->
+
+        <!-- ======= Cta Section ======= -->
+        <section id="cta" class="cta">
+            <div class="container">
+
+                <div class="text-center" data-aos="zoom-in">
+                    <h3>Open Source</h3>
+                    <p> Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
+                        pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt
+                        mollit anim id est laborum.</p>
+                    <a class="cta-btn" href="#">Code on Github</a>
+                </div>
+
+            </div>
+        </section><!-- End Cta Section -->
+
+        <!-- ======= Services Section ======= -->
+        <section id="services" class="services">
+            <div class="container">
+
+                <div class="section-title" data-aos="fade-down">
+                    <span>Implementation</span>
+                    <h2>Implementation</h2>
+                    <p>Sit sint consectetur velit quisquam cupiditate impedit suscipit alias</p>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="icon-box" data-aos="fade-up" data-aos-delay="100">
+                            <i class="icofont-computer" style="color: #0ea5e0;"></i>
+                            <h4><a href="#">Ingest documents</a></h4>
+                            <p> Parses documents taking out body_text and saves under
+                                paragraphsin Redis cluster</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="icon-box" data-aos="fade-up" data-aos-delay="200">
+                            <i class="icofont-search-document" style="color: #07cc70;"></i>
+                            <h4><a href="#">Detect language</a></h4>
+                            <p>Uses Redis Gears by registering key reader on ‘paragraphs:*’. Not all medical literature
+                                was in English.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="icon-box" data-aos="fade-up" data-aos-delay="300">
+                            <i class="icofont-text-width" style="color: #e40373;"></i>
+                            <h4><a href="#">Split paragraphs into sentences</a></h4>
+                            <p>using streams to process articles.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="icon-box" data-aos="fade-up" data-aos-delay="400">
+                            <i class="icofont-ui-check" style="color: #f0b103;"></i>
+                            <h4><a href="#">Spell checker</a></h4>
+                            <p>The script uses symspell library and Redis Gears and 
+                                stream reader.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="icon-box" data-aos="fade-up" data-aos-delay="500">
+                            <i class="icofont-earth" style="color: #3145fa;"></i>
+                            <h4><a href="#">Tokeniser</a></h4>
+                            <p>The step uses transformers BERT based tokeniser
+                                 specifically adapted to clinical research
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="icon-box" data-aos="fade-up" data-aos-delay="600">
+                            <i class="icofont-database" style="color: #a00098;"></i>
+                            <h4><a href="#">Methathesaurus (UMLS)</a></h4>
+                            <p>UMLS was loaded into MySQL following UMLS instruction and loaded into Redis</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="icon-box" data-aos="fade-up" data-aos-delay="500">
+                            <i class="icofont-abacus" style="color: #3145fa;"></i>
+                            <h4><a href="#">Aho-Corasick automata</a></h4>
+                            <p> Takes the dump of words to Concept Unique Identifiers 
+                                (CUI) and creates an Automata.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="icon-box" data-aos="fade-up" data-aos-delay="600">
+                            <i class="icofont-match-review" style="color: #a00098;"></i>
+                            <h4><a href="#">Matcher</a></h4>
+                            <p>breaks architectural pattern to use Gears/Streams 
+                                and SHF type of collection.</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+        <!-- End Services Section -->
+    </main>
+    <!-- Footer -->
+    <footer id="footer">
+        <div class="container py-4">
+            <div class="copyright">
+                &copy; Open Source | <strong><span>The Pattern</span></strong>.
+            </div>
+        </div>
+    </footer>
+    <!-- End Footer -->
+</div>

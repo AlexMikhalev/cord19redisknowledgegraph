@@ -7,6 +7,7 @@ import { Store } from '@ngrx/store';
 import { State, ISearchResult} from '../../redux/state';
 import * as AppSelectors from '../../redux/selectors';
 import { filter, distinctUntilChanged, map } from 'rxjs/operators';
+import { Read, Set } from 'src/app/redux/actions.js';
 
 declare var ForceGraph3D;
 declare var ForceGraphVR;
@@ -25,6 +26,7 @@ export class GraphComponent implements OnInit {
   mode = '3D';
   canvasHeight: number;
   canvasWidth: number;
+  sidebarOpen = false;
 
   @Output() graphClicked: EventEmitter<any> = new EventEmitter();
   @Input() width;
@@ -134,6 +136,33 @@ export class GraphComponent implements OnInit {
     const threshold = 0;
     const bloomPass = new UnrealBloomPass(new Vector2(128, 128), strength, radius, threshold);
     this.Graph.postProcessingComposer().addPass(bloomPass);
+  }
+
+  onGraphClick(event){
+    switch(event.type){
+      case 'node':
+        
+        break;
+
+      case 'edge':
+        this.store.dispatch(new Read({
+          state: 'edgeResults',
+          route: `edge/edges:${event.data.source.id}:${event.data.target.id}`
+        }));
+        this.store.dispatch(new Set({
+          data: true,
+          state: 'sidebar'
+        }));
+
+        this.store.dispatch(new Set({
+          data: event.data,
+          state: 'selected'
+        }));
+        break;
+
+      default:
+        break;
+    }
   }
 
 }
