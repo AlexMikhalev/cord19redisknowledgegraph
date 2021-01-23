@@ -1,5 +1,7 @@
 <section class="row justify-content-center slider">
     <form class="col-md-10" [formGroup]="form">
-        <ngx-slider formControlName="year" [options]="options"></ngx-slider>
+        <ngx-slider formControlName="year" 
+                    (valueChange)="fetchFilteredData()"
+                    [options]="options"></ngx-slider>
     </form>
 </section>

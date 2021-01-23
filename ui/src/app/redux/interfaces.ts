@@ -5,6 +5,7 @@ export interface ICreate {
     route?: string;
     state?: string;
     message?: string;
+    postProcess?: string;
     navigateTo?: {
         route: string,
         query?: any
@@ -22,6 +23,8 @@ export interface ICreateSuccess {
         route: string,
         query?: any
     };
+    postProcess?: string,
+    postProcessStatus?: boolean
 }
 
 export interface ICreateFailure {

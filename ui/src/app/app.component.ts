@@ -85,6 +85,7 @@ export class AppComponent implements OnInit {
       this.store.dispatch(new Create({
         data: { search: this.searchForm.get('term').value },
         state: 'searchResults',
+        postProcess: 'map:years', 
         route: 'gsearch'
       }));
 

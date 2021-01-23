@@ -57,3 +57,9 @@ export const selectSearchTerm = createSelector(
         return state.searchTerm
     });
 
+export const selectSearchYears = createSelector(
+    selectAppState,
+    (state: AppState) => {
+        return state.searchYears
+    });
+

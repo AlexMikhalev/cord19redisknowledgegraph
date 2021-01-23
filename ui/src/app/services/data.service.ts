@@ -28,6 +28,8 @@ export class DataService {
         state: payload.state,
         navigate: status.navigate,
         navigateTo: payload.navigateTo,
+        postProcess: payload.postProcess,
+        postProcessStatus: status.postProcessStatus,
         message: payload.message
       }
       return response;
@@ -79,14 +81,20 @@ export class DataService {
   checkPayloadStatus(payload){
     let result = {
       notify: false,
-      navigate: false
+      navigate: false,
+      postProcessStatus: false
     }
+
     if(payload.navigateTo !== undefined){
       result.navigate = true;
     }
 
     if(payload.message !== undefined){
       result.notify = true;
+    }
+
+    if(payload.postProcess !== undefined){
+      result.postProcessStatus = true;
     }
 
     return result;

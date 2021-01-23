@@ -25,6 +25,7 @@ export interface AppState {
     error: any;
     searchTerm: string,
     searchResults: { search_result: ISearchResult };
+    searchYears: any;
     edgeResults: IEdge[];
     nodeResults: any;
     toolBarStyle: string;
@@ -38,6 +39,7 @@ export const initialState: AppState = {
     error: null,
     searchTerm:'',
     searchResults: null,
+    searchYears: null,
     edgeResults: [],
     nodeResults: null,
     toolBarStyle: 'dark',

@@ -8,6 +8,8 @@ import * as AppActions from './actions';
 import { ICreateSuccess, IReadSuccess, IUpdateSuccess, IDeleteSuccess, IAuthSuccess, ISignupSuccess } from './interfaces';
 import { NotificationsService } from 'angular2-notifications';
 import { DataService } from '../services/data.service';
+import { Store } from '@ngrx/store';
+import { State } from './state';
 
 @Injectable()
 export class AppEffects {
@@ -31,7 +33,8 @@ export class AppEffects {
         private actions$: Actions,
         private router: Router,
         private service: DataService,
-        private notify: NotificationsService
+        private notify: NotificationsService,
+        private store: Store<State>
     ) {
         this.create$ = this.actions$.pipe(
             ofType(AppActions.CREATE),
@@ -52,6 +55,31 @@ export class AppEffects {
 
                 if(action.payload.navigate){
                     this.router.navigate([action.payload.navigateTo.route], { queryParams: action.payload.navigateTo.query });
+                }
+
+                if(action.payload.postProcessStatus){
+                    switch(action.payload.postProcess){
+                        case 'map:years':
+                            let years = action.payload.data.years.sort();
+                            const min = years.reduce((p, v) =>  ( p < v ? p : v ));
+                            const max = years.reduce((p, v) => ( p > v ? p : v ));
+                            const mid = Math.ceil(years.length / 2);
+                            const median = years.length % 2 == 0 ? (years[mid] + years[mid - 1]) / 2 : years[mid - 1];
+                            
+                            this.store.dispatch(new AppActions.Set({
+                                data: { 
+                                    min: min,
+                                    max: max,
+                                    median: median,
+                                    list: action.payload.data.years
+                                },
+                                state: 'searchYears'
+                            }))
+                            break;      
+                            
+                        default:
+                            break;
+                    }
                 }
             })
         );
