@@ -5,9 +5,10 @@
         <b>Target:</b> {{ selected?.target?.name }}
     </div>
     <ul class="content">
-        <li *ngFor="let result of results$ | async">
+        <li *ngFor="let result of (edgeData$ | async).results">
             <b>Title:</b> {{ result.title }} <br/>
             <b>Sentence:</b> {{ result.sentence }}
         </li>
+        <li><b>Years:</b> <span *ngFor="let year of (edgeData$ | async).years">{{year}}&nbsp;</span></li>
     </ul>
 </section>

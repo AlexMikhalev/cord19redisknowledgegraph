@@ -3,6 +3,7 @@
 .sidebar {
     margin-top: $navbarHeight;
     height: 100%;
+    min-height: 100%;
     width: 320px;
     display: none;
     position: fixed;

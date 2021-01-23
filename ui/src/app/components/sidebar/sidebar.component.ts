@@ -14,7 +14,7 @@ import { filter, map, distinctUntilChanged } from 'rxjs/operators';
 export class SidebarComponent implements OnInit {
   open = false;
   selected: any;
-  results$: any;
+  edgeData$: any;
 
   constructor(private store: Store<State>) { }
 
@@ -37,7 +37,7 @@ export class SidebarComponent implements OnInit {
       }
     );
 
-    this.results$ = this.store.select(AppSelectors.selectEdgeResults);
+    this.edgeData$ = this.store.select(AppSelectors.selectEdgeResults);
   }
 
   closeSidebar() {
