@@ -7,7 +7,7 @@ import { Store } from '@ngrx/store';
 import { State, ISearchResult} from '../../redux/state';
 import * as AppSelectors from '../../redux/selectors';
 import { filter, distinctUntilChanged, map } from 'rxjs/operators';
-import { Read, Set } from 'src/app/redux/actions.js';
+import { Read, Set as SetStoreValue } from 'src/app/redux/actions.js';
 
 declare var ForceGraph3D;
 declare var ForceGraphVR;
@@ -76,9 +76,14 @@ export class GraphComponent implements OnInit {
     //   default:
     //     this.Graph = ForceGraph3D();
     // }
+    let highlightNodes = new Set();
+    let highlightLinks = new Set();
     this.Graph = ForceGraph3D();
     this.Graph(this.graph.nativeElement)
-      .linkDirectionalParticleColor(() => 'red')
+      // .linkDirectionalParticleColor(() => 'red')
+      // .linkDirectionalParticleWidth(4)
+      .linkWidth(link => highlightLinks.has(link) ? 4 : 1)
+      .linkDirectionalParticles(link => highlightLinks.has(link) ? 4 : 0)
       .linkDirectionalParticleWidth(4)
       .nodeAutoColorBy('rank')
       .nodeThreeObject(node => {
@@ -96,7 +101,19 @@ export class GraphComponent implements OnInit {
 
         return obj;
       })
-      .linkHoverPrecision(10)
+      .linkHoverPrecision(5)
+      .onLinkHover(link => {
+        highlightNodes.clear();
+        highlightLinks.clear();
+
+        if (link) {
+          highlightLinks.add(link);
+          highlightNodes.add(link.source);
+          highlightNodes.add(link.target);
+        }
+
+        this.updateHighlight();
+      })
       .backgroundColor('#37474f')
       .height(this.canvasHeight)
       .width(this.canvasWidth)
@@ -119,6 +136,18 @@ export class GraphComponent implements OnInit {
 
   onLinkClick(node, event){
     this.onGraphClick({ type: 'edge', data: node });
+  }
+
+  onLinkHover(node, event){
+    this.onGraphClick({ type: 'edge', data: node });
+  }
+
+  updateHighlight() {
+    // trigger update of highlighted objects in scene
+    this.Graph
+      .nodeColor(this.Graph.nodeColor())
+      .linkWidth(this.Graph.linkWidth())
+      .linkDirectionalParticles(this.Graph.linkDirectionalParticles());
   }
 
   // emitParticles(){
@@ -149,12 +178,12 @@ export class GraphComponent implements OnInit {
           state: 'edgeResults',
           route: `edge/edges:${event.data.source.id}:${event.data.target.id}`
         }));
-        this.store.dispatch(new Set({
+        this.store.dispatch(new SetStoreValue({
           data: true,
           state: 'sidebar'
         }));
 
-        this.store.dispatch(new Set({
+        this.store.dispatch(new SetStoreValue({
           data: event.data,
           state: 'selected'
         }));
