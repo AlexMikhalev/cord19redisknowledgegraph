@@ -1,8 +1,8 @@
 <section class="sidebar" id="sidebarContainer" [ngClass]="{ 'opened': open }">
     <a class="closebtn" (click)="closeSidebar()">&times;</a>
     <div class="">
-        <b>Source:</b> {{ selected?.source?.name }} <br/>
-        <b>Target:</b> {{ selected?.target?.name }}
+        <b>Source:</b> <a class="umls" href="https://uts.nlm.nih.gov/uts/umls/concept/{{ selected?.source?.id }}" target="_blank">{{ selected?.source?.id }}</a>:{{ selected?.source?.name }} <br/>
+        <b>Target:</b> <a class="umls" href="https://uts.nlm.nih.gov/uts/umls/concept/{{ selected?.target?.id }}" target="_blank">{{ selected?.target?.id }}</a>:{{ selected?.target?.name }}
     </div>
     <ul class="content">
         <li *ngFor="let result of (edgeData$ | async).results">

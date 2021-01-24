@@ -16,13 +16,19 @@
     padding: 16px;
     transition: 0.5s;
 
-    a{
+    a.closebtn{
         cursor: pointer;
         position: absolute;
         top: 0;
         right: 25px;
         font-size: 36px;
         margin-left: 50px;
+    }
+    .umls{
+        cursor: pointer;
+        position: relative;
+        font-size: 16px;
+        margin-left: 4px;
     }
 }
 
