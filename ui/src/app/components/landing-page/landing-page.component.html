@@ -88,7 +88,7 @@
                     <div class="col-md-6">
                         <div class="icon-box" data-aos="fade-up" data-aos-delay="100">
                             <i class="icofont-computer" style="color: #0ea5e0;"></i>
-                            <h4><a href="#">Ingest documents</a></h4>
+                            <h4><a href="#">1. Ingest documents</a></h4>
                             <p> Parses documents taking out body_text and saves under
                                 paragraphsin Redis cluster</p>
                         </div>
@@ -96,7 +96,7 @@
                     <div class="col-md-6">
                         <div class="icon-box" data-aos="fade-up" data-aos-delay="200">
                             <i class="icofont-search-document" style="color: #07cc70;"></i>
-                            <h4><a href="#">Detect language</a></h4>
+                            <h4><a href="#">2. Detect language</a></h4>
                             <p>Uses Redis Gears by registering key reader on ‘paragraphs:*’. Not all medical literature
                                 was in English.</p>
                         </div>
@@ -104,14 +104,14 @@
                     <div class="col-md-6">
                         <div class="icon-box" data-aos="fade-up" data-aos-delay="300">
                             <i class="icofont-text-width" style="color: #e40373;"></i>
-                            <h4><a href="#">Split paragraphs into sentences</a></h4>
+                            <h4><a href="#">3. Split paragraphs into sentences</a></h4>
                             <p>using streams to process articles.</p>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="icon-box" data-aos="fade-up" data-aos-delay="400">
                             <i class="icofont-ui-check" style="color: #f0b103;"></i>
-                            <h4><a href="#">Spell checker</a></h4>
+                            <h4><a href="#">4. Spell checker</a></h4>
                             <p>The script uses symspell library and Redis Gears and 
                                 stream reader.</p>
                         </div>
@@ -119,7 +119,7 @@
                     <div class="col-md-6">
                         <div class="icon-box" data-aos="fade-up" data-aos-delay="500">
                             <i class="icofont-earth" style="color: #3145fa;"></i>
-                            <h4><a href="#">Tokeniser</a></h4>
+                            <h4><a href="#">search?q=pneumonia?q=pneumonia5. Tokeniser</a></h4>
                             <p>The step uses transformers BERT based tokeniser
                                  specifically adapted to clinical research
                             </p>
@@ -128,14 +128,14 @@
                     <div class="col-md-6">
                         <div class="icon-box" data-aos="fade-up" data-aos-delay="600">
                             <i class="icofont-database" style="color: #a00098;"></i>
-                            <h4><a href="#">Methathesaurus (UMLS)</a></h4>
+                            <h4><a href="#">6. Methathesaurus (UMLS)</a></h4>
                             <p>UMLS was loaded into MySQL following UMLS instruction and loaded into Redis</p>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="icon-box" data-aos="fade-up" data-aos-delay="500">
                             <i class="icofont-abacus" style="color: #3145fa;"></i>
-                            <h4><a href="#">Aho-Corasick automata</a></h4>
+                            <h4><a href="#">7. Aho-Corasick automata</a></h4>
                             <p> Takes the dump of words to Concept Unique Identifiers 
                                 (CUI) and creates an Automata.</p>
                         </div>
@@ -143,7 +143,7 @@
                     <div class="col-md-6">
                         <div class="icon-box" data-aos="fade-up" data-aos-delay="600">
                             <i class="icofont-match-review" style="color: #a00098;"></i>
-                            <h4><a href="#">Matcher</a></h4>
+                            <h4><a href="#">8. Matcher</a></h4>
                             <p>breaks architectural pattern to use Gears/Streams 
                                 and SHF type of collection.</p>
                         </div>
