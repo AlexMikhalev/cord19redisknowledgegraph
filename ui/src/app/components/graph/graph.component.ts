@@ -114,11 +114,11 @@ export class GraphComponent implements OnInit {
   }
 
   onNodeClick(node, event){
-    this.graphClicked.emit({ type: 'node', data: node });
+    this.onGraphClick({ type: 'node', data: node })
   }
 
   onLinkClick(node, event){
-    this.graphClicked.emit({ type: 'edge', data: node });
+    this.onGraphClick({ type: 'edge', data: node });
   }
 
   // emitParticles(){
