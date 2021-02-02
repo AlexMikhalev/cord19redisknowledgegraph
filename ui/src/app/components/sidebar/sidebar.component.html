@@ -5,10 +5,9 @@
         <b>Target:</b> <a class="umls" href="https://uts.nlm.nih.gov/uts/umls/concept/{{ selected?.target?.id }}" target="_blank">{{ selected?.target?.id }}</a>:{{ selected?.target?.name }}
     </div>
     <ul class="content">
-        <li *ngFor="let result of (edgeData$ | async).results">
+        <li *ngFor="let result of (edgeData$ | async)?.results">
             <b>Title:</b> {{ result.title }} <br/>
             <b>Sentence:</b> {{ result.sentence }}
         </li>
-        <li><b>Years:</b> <span *ngFor="let year of (edgeData$ | async).years">{{year}}&nbsp;</span></li>
     </ul>
 </section>
