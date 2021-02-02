@@ -1,0 +1,21 @@
+curl -i -H "Content-Type: application/json" -X POST -d '{"search":"How does temperature and humidity affect the transmission of 2019-nCoV"}' http://10.144.17.211:8181/search
+HTTP/1.0 200 OK
+Content-Type: application/json
+Content-Length: 2235
+Access-Control-Allow-Origin: *
+Server: Werkzeug/1.0.1 Python/3.8.2
+Date: Mon, 22 Jun 2020 18:49:48 GMT
+
+{"search_result":{"links":[{"source":"C5190195","target":"C5198346"},{"source":"C5190195","target":"C4730283"},{"source":"C5190195","target":"C5194353"},{"source":"C5190195","target":"C5143831"},{"source":"C5190195","target":"C5200853"},{"source":"C5198346","target":"C4730283"},{"source":"C5198346","target":"C5194353"},{"source":"C5198346","target":"C5143831"},{"source":"C5198346","target":"C5200853"},{"source":"C4730283","target":"C5194353"},{"source":"C4730283","target":"C5143831"},{"source":"C4730283","target":"C5200853"},{"source":"C5194353","target":"C5143831"},{"source":"C5194353","target":"C5200853"},{"source":"C5143831","target":"C5200853"}],"nodes":[{"id":"C5190195","name":"transmission","rank":"2215647"},{"id":"C5198346","name":"temperature","rank":"2394097"},{"id":"C5190195","name":"transmission","rank":"2215647"},{"id":"C4730283","name":"monitors","rank":"124648"},{"id":"C5190195","name":"transmission","rank":"2215647"},{"id":"C5194353","name":"affect","rank":"665257"},{"id":"C5190195","name":"transmission","rank":"2215647"},{"id":"C5143831","name":"dancing","rank":"2363"},{"id":"C5190195","name":"transmission","rank":"2215647"},{"id":"C5200853","name":"2019","rank":"1106388"},{"id":"C5198346","name":"temperature","rank":"2394097"},{"id":"C4730283","name":"monitors","rank":"124648"},{"id":"C5198346","name":"temperature","rank":"2394097"},{"id":"C5194353","name":"affect","rank":"665257"},{"id":"C5198346","name":"temperature","rank":"2394097"},{"id":"C5143831","name":"dancing","rank":"2363"},{"id":"C5198346","name":"temperature","rank":"2394097"},{"id":"C5200853","name":"2019","rank":"1106388"},{"id":"C4730283","name":"monitors","rank":"124648"},{"id":"C5194353","name":"affect","rank":"665257"},{"id":"C4730283","name":"monitors","rank":"124648"},{"id":"C5143831","name":"dancing","rank":"2363"},{"id":"C4730283","name":"monitors","rank":"124648"},{"id":"C5200853","name":"2019","rank":"1106388"},{"id":"C5194353","name":"affect","rank":"665257"},{"id":"C5143831","name":"dancing","rank":"2363"},{"id":"C5194353","name":"affect","rank":"665257"},{"id":"C5200853","name":"2019","rank":"1106388"},{"id":"C5143831","name":"dancing","rank":"2363"},{"id":"C5200853","name":"2019","rank":"1106388"}]}}
+
+
+"Effectiveness of case isolation/isolation of exposed individuals (i.e. quarantine)",
+"Effectiveness of community contact reduction",
+"Effectiveness of inter/inner travel restriction",
+"Effectiveness of school distancing",
+"Effectiveness of workplace distancing",
+"Effectiveness of a multifactorial strategy prevent secondary transmission",
+"Seasonality of transmission",
+"How does temperature and humidity affect the transmission of 2019-nCoV?",
+"Significant changes in transmissibility in changing seasons?",
+"Effectiveness of personal protective equipment (PPE)"

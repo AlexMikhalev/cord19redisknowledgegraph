@@ -1,13 +1,14 @@
 #!/usr/bin/python
 from configparser import ConfigParser
+from pathlib import Path
  
- 
-def config(filename='database.ini', section='redis'):
+def config(filename='./conf/database.ini', section='redis'):
     # create a parser
     parser = ConfigParser()
     # read config file
-    parser.read(filename)
- 
+    filepathname=Path(filename).resolve()
+    parser.read(filepathname)
+
     # get section, default to redis
     db = {}
     if parser.has_section(section):

@@ -1,0 +1,26 @@
+
+WITH ['C4741648', 'C5194974', 'C5194991', 'C5105487', 'C5200764'] as ids 
+MATCH (e:entity) where e.id in ids RETURN DISTINCT e.id,e.name,max(e.rank)
+
+#get edges    
+WITH ['C4741648', 'C5194974', 'C5194991', 'C5105487', 'C5200764'] as ids
+MATCH (e:entity)-[r]->(t:entity) where e.id in ids RETURN DISTINCT e.id,t.id,max(r.rank)
+
+#find most connected nodes
+MATCH
+  (n)
+RETURN
+  id(n),
+  indegree(n) + outdegree(n) AS degree
+ORDER BY
+  degree DESC
+LIMIT 5
+#using pageRank
+GRAPH.QUERY cord19medical: CALL algo.pageRank('entity','related')
+
+MATCH (n:entity)
+RETURN count(n) as count
+
+WITH ['C4741648', 'C5194974', 'C5194991', 'C5105487', 'C5200764'] as ids
+MATCH (e:entity)-[r]->(t:entity) where e.id in ids RETURN DISTINCT e.id,t.id,max(r.rank) ORDER BY r.rank 
+ 

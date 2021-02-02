@@ -1,20 +1,25 @@
 from langdetect import detect   
-from redisgears import log
+
+def remove_prefix(text, prefix):
+    return text[text.startswith(prefix) and len(prefix):]
 
 def detect_language(record):
     #detect language of the article
+    value=record['value']
     try:
-        lang=detect(record['value'][:1000])
+        lang=detect(value[:1000])
     except:
         lang="empty"
     if lang=='en':
-        execute('SET', 'en:' + record['key'], record['value'])
-        log("Success "+str(record['key']),level='notice')
+        article_id = remove_prefix(record['key'],'paragraphs:') 
+        log(f"Success lang {article_id}",level='notice')
+        execute('XADD', 'lang_eng{%s}' % hashtag(), '*', 'article_id', f"{article_id}","content",f"{value}")
     else:
-        log("Failed to detect language: "+str(record['key']),level='notice')
-        execute('SADD','articles_to_delete', record['key'])
+        log("Failed to detect language, deleting: "+str(record['key']),level='notice')
+        execute('DEL', record['key'])
+
 
 gb = GB()
 gb.foreach(detect_language)
 gb.count()
-gb.register('paragraphs:*',keyTypes=['string'])
+gb.register('paragraphs:*',keyTypes=['string'], mode="async_local")
