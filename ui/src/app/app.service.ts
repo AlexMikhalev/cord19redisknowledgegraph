@@ -18,7 +18,7 @@ export class AppService {
   // searchSocket: WebSocketSubject<any> = webSocket(environment.redisUrl + '/search');
   // graphSocket: WebSocketSubject<any> = webSocket(environment.redisUrl + '/graph');
 
-  searchUri = 'http://10.144.17.211:8181/search'
+  searchUri = 'http://api.thepattern.digital/gsearch'
   
   graphData$: Observable<any>;
   searchData$: Observable<any>;

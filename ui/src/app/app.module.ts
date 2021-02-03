@@ -60,7 +60,7 @@ import { SearchFormComponent } from './components/search-form/search-form.compon
   ],
   providers: [
     // AppService,
-    // DataService
+    DataService
   ],
   bootstrap: [AppComponent]
 })
