@@ -1,0 +1,48 @@
+@import "../../../scss/variables";
+
+.sidebar {
+    margin-top: $navbarHeight;
+    min-height: 100%;
+    width: 320px;
+    display: none;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    right: 0;
+    color: #90a4ae;
+    background-color: #263238;
+    overflow-x: hidden;
+    overflow-y: auto;
+    padding: 16px;
+    transition: 0.5s;
+
+    a.closebtn{
+        cursor: pointer;
+        position: absolute;
+        top: 0;
+        right: 25px;
+        font-size: 36px;
+        margin-left: 50px;
+    }
+    .umls{
+        cursor: pointer;
+        position: relative;
+        font-size: 16px;
+        margin-left: 4px;
+    }
+}
+
+.sidebar.opened{
+    display: inline-block;
+    // width: 320px;
+}
+
+.content{
+    list-style: none;
+    padding: 0px;
+    margin: 0px;
+
+    li{
+        padding-bottom: 16px;
+    }
+}

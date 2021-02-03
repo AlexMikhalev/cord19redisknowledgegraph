@@ -1,0 +1,27 @@
+<nav class="navbar navbar-expand-lg">
+    <div class="container">
+        <div class="row flex-fill">
+            <a class="navbar-brand" routerLink="/">
+                <img src="" alt="" />
+            </a>
+            <app-search-form mode="small"></app-search-form>
+            <div ngbDropdown class="d-inline-block ml-4">
+                <button class="btn btn-outline-primary" id="dropdownBasic1" ngbDropdownToggle>Change Viewport</button>
+                <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                    <button ngbDropdownItem>3D</button>
+                    <button ngbDropdownItem>VR (Coming Soon)</button>
+                    <button ngbDropdownItem>AR (Coming Soon)</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+<section id="graphContainer" #graph></section>
+<div class="empty-search" *ngIf="emptySearch" >
+    <h5 class="text-light">Please enter a search term to view graph</h5>
+</div>
+<app-slider *ngIf="!emptySearch"></app-slider>
+<app-sidebar></app-sidebar>
+<!-- <app-graph (graphClicked)="onGraphClick($event)"></app-graph> -->
+<!-- <app-sidebar></app-sidebar> -->
+

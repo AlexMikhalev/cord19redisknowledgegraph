@@ -1,0 +1,11 @@
+<form class="form-inline search-form" [ngClass]="{'big': mode === 'big', 'small':mode === 'small' }" [formGroup]="searchForm">
+    <div class="input-group">
+        <input type="text" class="form-control" placeholder="search for medical knowledge" aria-label="search"
+            aria-describedby="search-icon" formControlName='term'>
+        <div class="input-group-prepend" (click)="search()">
+            <span class="input-group-text" id="search-icon">
+                <i class="fa fa-search"></i> <span>Search</span>
+            </span>
+        </div>
+    </div>
+</form>

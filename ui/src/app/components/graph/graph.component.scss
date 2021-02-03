@@ -1,0 +1,20 @@
+@import "../../../scss/variables";
+
+.empty-search{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: calc(100vh - 64px);
+    justify-content: center;
+    align-items: center;
+    
+    h5{
+        color: #90a4ae !important;
+        font-weight: 300;
+    }
+}
+
+.navbar{
+  height: 64px;
+  background-color: #263238;
+}
