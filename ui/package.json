@@ -42,18 +42,18 @@
     "rxjs": "~6.6.3",
     "three": "^0.116.1",
     "three-spritetext": "^1.5.4",
-    "tslib": "^1.14.1",
-    "zone.js": "~0.10.3"
+    "tslib": "^1.10.0",
+    "zone.js": "~0.10.2"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "^0.901.13",
+    "@angular-devkit/build-angular": "~0.901.13",
     "@angular/cli": "^9.1.13",
     "@angular/compiler-cli": "~9.1.13",
     "@angular/language-service": "~9.1.13",
     "@types/jasmine": "~3.3.8",
     "@types/jasminewd2": "~2.0.3",
-    "@types/node": "~8.9.4",
-    "codelyzer": "^5.0.0",
+    "@types/node": "^12.11.1",
+    "codelyzer": "^5.1.2",
     "electron": "^9.4.2",
     "jasmine-core": "~3.4.0",
     "jasmine-spec-reporter": "~4.2.1",
