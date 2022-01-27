@@ -41,7 +41,7 @@
     "ngx-owl-carousel-o": "~3.1.1",
     "redis": "^3.0.2",
     "rxjs": "~6.6.3",
-    "three": "^0.116.1",
+    "three": "^0.137.0",
     "three-spritetext": "^1.5.4",
     "tslib": "^1.10.0",
     "zone.js": "~0.10.2"
