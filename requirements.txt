@@ -3,3 +3,4 @@ redis-py-cluster==2.0.0
 redisbloom==0.3.2
 ujson==2.0.3
 gears-cli
+zipp>=3.19.1 # not directly required, pinned by Snyk to avoid a vulnerability
