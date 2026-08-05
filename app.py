@@ -118,7 +118,7 @@ def qasearch_task():
     this search using Redis Graph to get list of articles and sentences and then calls BERT QA model to create answer
     This is ugly draft to prove the point. 
     TODO: pre-process articles with qa tokeniser 
-    TODO: pre-process article create hash with article_id, title and content
+    TODO: pre-process article create hash with article_id as key, title, body and abstract, created_at and updated_at as values
     TODO: apply spellcheck to all articles titles and content
     """
      
