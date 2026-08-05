@@ -18,7 +18,7 @@
     "3d-force-graph-vr": "^1.35.2",
     "@angular-slider/ngx-slider": "^2.0.3",
     "@angular/animations": "~9.1.13",
-    "@angular/common": "~9.1.13",
+    "@angular/common": "~20.3.27",
     "@angular/compiler": "~9.1.13",
     "@angular/core": "~9.1.13",
     "@angular/forms": "~9.1.13",
